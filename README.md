@@ -1,36 +1,174 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shades and Sinew Jewelry - Frontend
 
-## Getting Started
+A modern e-commerce jewelry store built with Next.js, TypeScript, and shadcn/ui components.
 
-First, run the development server:
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- pnpm (recommended) or npm/yarn
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Run the development server**
+   ```bash
+   pnpm dev
+   ```
+
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 16 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **UI Components**: shadcn/ui
+- **Icons**: Lucide React
+- **State Management**: React Hooks
+- **Routing**: Next.js App Router
+
+## 🎨 UI Components (shadcn/ui)
+
+This project uses shadcn/ui components for a consistent design system. The components are located in `src/components/ui/`.
+
+### Available Components
+
+- Button, Card, Input, Label
+- Dialog, Dropdown Menu, Select
+- Checkbox, Radio Group
+- Accordion, Carousel, Textarea
+- Sonner (Toast notifications)
+
+### Adding New Components
+
+To add new shadcn/ui components:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Add a single component
+pnpm dlx shadcn@latest add [component-name]
+
+# Add multiple components
+pnpm dlx shadcn@latest add button card input
+
+# Examples
+pnpm dlx shadcn@latest add tabs
+pnpm dlx shadcn@latest add badge
+pnpm dlx shadcn@latest add separator
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Component Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```tsx
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+export default function MyComponent() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Title</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Button variant="default">Click me</Button>
+      </CardContent>
+    </Card>
+  );
+}
+```
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                 # Next.js App Router pages
+│   ├── (routes)/       # Route groups
+│   ├── globals.css     # Global styles
+│   └── layout.tsx      # Root layout
+├── components/         # Reusable components
+│   ├── ui/            # shadcn/ui components
+│   ├── header/        # Header components
+│   ├── category/      # Category page components
+│   ├── content/       # Content section components
+│   ├── product/       # Product detail components
+│   └── about/         # About page components
+├── assets/            # Static assets (images)
+├── hooks/             # Custom React hooks
+└── lib/               # Utility functions
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎯 Key Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Type Safety**: Full TypeScript implementation
+- **Component Reusability**: Modular shadcn/ui components
+- **Image Optimization**: Next.js Image component support
+- **SEO Friendly**: Built-in Next.js SEO optimizations
 
-## Deploy on Vercel
+## 🔧 Development
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Code Style
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Uses ESLint for code linting
+- TypeScript for type safety
+- Tailwind CSS for styling
+- Component-based architecture
+
+### Environment Variables
+
+Create a `.env.local` file for environment-specific variables:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+```
+
+## 📦 Build & Deploy
+
+### Build for Production
+
+```bash
+pnpm build
+```
+
+### Start Production Server
+
+```bash
+pnpm start
+```
+
+### Deploy on Vercel
+
+The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+
+For other deployment options, check the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📚 Learn More
+
+- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API
+- [shadcn/ui Documentation](https://ui.shadcn.com) - Component library documentation
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Utility-first CSS framework
+- [Lucide React](https://lucide.dev/) - Icon library
+
+## 📄 License
+
+This project is licensed under the MIT License.
