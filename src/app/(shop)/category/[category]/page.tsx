@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import CategoryHeader from "../../../../components/category/CategoryHeader";
 import FilterSortBar from "../../../../components/category/FilterSortBar";
 import ProductGrid from "../../../../components/category/ProductGrid";
+import { useGetProductsQuery } from "@/state/products-api";
 
 interface CategoryPageProps {
   params: {
@@ -15,7 +16,8 @@ interface CategoryPageProps {
 export default function CategoryPage() {
   const params = useParams();
   const category = params.category as string;
-  console.log(category)
+  const { data: products = [], isLoading, error } = useGetProductsQuery({ category_slug: category });
+
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   return (
@@ -27,10 +29,9 @@ export default function CategoryPage() {
       <FilterSortBar 
         filtersOpen={filtersOpen}
         setFiltersOpen={setFiltersOpen}
-        itemCount={24}
+        itemCount={products.length}
       />
-      
-      <ProductGrid category={category} />
+      <ProductGrid products={products} isLoading={isLoading} error={error} />
     </main>
   );
 }

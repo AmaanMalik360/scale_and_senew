@@ -199,7 +199,9 @@ import { getImageUrl } from "@/lib/utils";
 // ];
 
 interface ProductGridProps {
-  category?: string;
+  products: ProductWithCategory[];
+  isLoading: boolean;
+  error: unknown
 }
 
 // Helper function to format price from cents to euros
@@ -207,8 +209,8 @@ const formatPrice = (priceInCents: number): string => {
   return `€${(priceInCents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 };
 
-const ProductGrid = ({ category }: ProductGridProps) => {
-  const { data: products = [], isLoading, error } = useGetProductsQuery({ category_slug: category });
+const ProductGrid = ({ products, isLoading, error }: ProductGridProps) => {
+  // const { data: products = [], isLoading, error } = useGetProductsQuery({ category_slug: category });
 
   if (isLoading) {
     return (
@@ -249,16 +251,16 @@ const ProductGrid = ({ category }: ProductGridProps) => {
                   <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">
                     {/* Use first product image if available, otherwise use placeholder */}
                     <img
-                      src={getImageUrl(product.images[0])}
+                      src={getImageUrl(product?.images?.[0])}
                       alt={product?.title}
                       className="w-full h-full object-cover transition-all duration-300 group-hover:opacity-0"
                     />
-                    {product?.images && product?.images?.length > 1 ? (<img
-                      src={getImageUrl(product.images[1])}
+                    {product?.images?.length > 1 ? (<img
+                      src={getImageUrl(product?.images?.[1])}
                       alt={`${product?.title} lifestyle`}
                       className="absolute inset-0 w-full h-full object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
                     />) : (<img
-                      src={getImageUrl(product.images[0])}
+                      src={getImageUrl(product?.images?.[0])}
                       alt={product?.title}
                       className="absolute inset-0 w-full h-full object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
                     />)}
