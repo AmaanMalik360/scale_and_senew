@@ -12,6 +12,7 @@ import ShoppingBag from "./ShoppingBag";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
 import haloImage from "@/assets/halo.jpg";
+import { useGetCategoriesQuery } from "@/state/categories-api";
 
 interface CartItem {
   id: number;
@@ -28,6 +29,9 @@ const Navigation = () => {
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
+  
+  // Fetch categories from API
+  const { data: categories, isLoading, error } = useGetCategoriesQuery({slug: 'fashion'});
   
   // Shopping bag state with 3 mock items
   const [cartItems, setCartItems] = useState<CartItem[]>([
@@ -96,23 +100,21 @@ const Navigation = () => {
     "Vintage Collection"
   ];
   
-  const navItems = [
-    { 
+  // Transform categories into navItems structure
+  const getNavItemsFromCategories = () => {
+    if (!categories || isLoading) return [];
+    
+    const shopCategory = {
       name: "Shop", 
       href: "/category/shop",
-      submenuItems: [
-        "Rings",
-        "Necklaces", 
-        "Earrings",
-        "Bracelets",
-        "Watches"
-      ],
+      submenuItems: categories.map(category => category.name),
       images: [
         { src: "/rings-collection.png", alt: "Rings Collection", label: "Rings" },
         { src: "/earrings-collection.png", alt: "Earrings Collection", label: "Earrings" }
       ]
-    },
-    { 
+    };
+
+    const newInCategory = { 
       name: "New in", 
       href: "/category/new-in",
       submenuItems: [
@@ -126,8 +128,9 @@ const Navigation = () => {
         { src: "/arcus-bracelet.png", alt: "Arcus Bracelet", label: "Arcus Bracelet" },
         { src: "/span-bracelet.png", alt: "Span Bracelet", label: "Span Bracelet" }
       ]
-    },
-    { 
+    };
+
+    const aboutCategory = { 
       name: "About", 
       href: "/about/our-story",
       submenuItems: [
@@ -140,8 +143,12 @@ const Navigation = () => {
       images: [
         { src: "/founders.png", alt: "Company Founders", label: "Read our story" }
       ]
-    }
-  ];
+    };
+
+    return [shopCategory, newInCategory, aboutCategory];
+  };
+
+  const navItems = getNavItemsFromCategories();
 
   return (
     <nav 
@@ -252,16 +259,26 @@ const Navigation = () => {
                 <ul className="space-y-2">
                    {navItems
                      .find(item => item.name === activeDropdown)
-                     ?.submenuItems.map((subItem, index) => (
-                      <li key={index}>
-                        <Link 
-                          href={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
-                          className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-sm font-light block py-2"
-                        >
-                          {subItem}
-                        </Link>
-                      </li>
-                   ))}
+                     ?.submenuItems.map((subItem, index) => {
+                      // Find the corresponding category for this subItem
+                      const category = categories?.find(cat => cat.name === subItem);
+                      const href = activeDropdown === "About" 
+                        ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}`
+                        : category 
+                          ? `/category/${category.slug}`
+                          : `/category/${subItem.toLowerCase()}`;
+                      
+                      return (
+                        <li key={index}>
+                          <Link 
+                            href={href}
+                            className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-sm font-light block py-2"
+                          >
+                            {subItem}
+                          </Link>
+                        </li>
+                      );
+                   })}
                 </ul>
               </div>
 
@@ -360,16 +377,26 @@ const Navigation = () => {
                     {item.name}
                   </Link>
                    <div className="mt-3 pl-4 space-y-2">
-                     {item.submenuItems.map((subItem, subIndex) => (
-                       <Link
-                         key={subIndex}
-                         href={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
-                         className="text-nav-foreground/70 hover:text-nav-hover text-sm font-light block py-1"
-                         onClick={() => setIsMobileMenuOpen(false)}
-                       >
-                         {subItem}
-                       </Link>
-                     ))}
+                     {item.submenuItems.map((subItem, subIndex) => {
+                      // Find the corresponding category for this subItem
+                      const category = categories?.find(cat => cat.name === subItem);
+                      const href = item.name === "About" 
+                        ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}`
+                        : category 
+                          ? `/category/${category.slug}`
+                          : `/category/${subItem.toLowerCase()}`;
+                      
+                      return (
+                        <Link
+                          key={subIndex}
+                          href={href}
+                          className="text-nav-foreground/70 hover:text-nav-hover text-sm font-light block py-1"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {subItem}
+                        </Link>
+                      );
+                     })}
                    </div>
                 </div>
               ))}

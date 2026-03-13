@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import CategoryHeader from "../../../../components/category/CategoryHeader";
 import FilterSortBar from "../../../../components/category/FilterSortBar";
 import ProductGrid from "../../../../components/category/ProductGrid";
@@ -13,14 +13,15 @@ interface CategoryPageProps {
 }
 
 export default function CategoryPage() {
-  const searchParams = useSearchParams();
   const params = useParams();
+  const category = params.category as string;
+  console.log(category)
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   return (
     <main className="pt-6">
       <CategoryHeader 
-        category={String(params?.category) || 'All Products'} 
+        category={category || 'All Products'} 
       />
       
       <FilterSortBar 
@@ -29,7 +30,7 @@ export default function CategoryPage() {
         itemCount={24}
       />
       
-      <ProductGrid />
+      <ProductGrid category={category} />
     </main>
   );
 }
