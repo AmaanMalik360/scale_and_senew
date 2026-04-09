@@ -1,4 +1,4 @@
-import WalletImage2 from "@/assets/scale_senew/Crocodile Scale Leather Brown Wallet.jpeg";
+import WalletImage from "@/assets/scale_senew/Crocodile Scale Leather Brown Wallet.jpeg";
 import LadiesBag from "@/assets/scale_senew/Snake Leather White Ladies Bag.jpeg";
 // import earringsCollection from "@/assets/earrings-collection.png";
 // import linkBracelet from "@/assets/link-bracelet.png";
@@ -13,7 +13,7 @@ const FiftyFiftySection = () => {
           <Link href="/category/wallets" className="block">
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
-                src={WalletImage2.src} 
+                src={WalletImage.src} 
                 alt="Crocodile Scale Wallet" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />

@@ -1,11 +1,22 @@
 import { baseApi } from "./base-api";
 
+export interface AttributeValue {
+  id: number;
+  value: string;
+}
+
+export interface AttributeFilter {
+  name: string;
+  values: AttributeValue[];
+}
+
 export interface Category {
   id: number;
   name: string;
   slug: string;
   parent_id?: number;
   children: Category[];
+  filterable_attributes: AttributeFilter[];
 }
 
 export interface CategoryCreate {

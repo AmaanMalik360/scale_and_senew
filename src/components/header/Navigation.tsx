@@ -12,6 +12,8 @@ import ShoppingBag from "./ShoppingBag";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
 import haloImage from "@/assets/halo.jpg";
+import WalletImage from "@/assets/scale_senew/Crocodile Scale Leather Brown Wallet.jpeg";
+import LadiesBag from "@/assets/scale_senew/Snake Leather White Ladies Bag.jpeg";
 import { useGetCategoriesQuery } from "@/state/categories-api";
 
 interface CartItem {
@@ -109,26 +111,26 @@ const Navigation = () => {
       href: "/category/shop",
       submenuItems: categories.map(category => category.name),
       images: [
-        { src: "/rings-collection.png", alt: "Rings Collection", label: "Rings" },
-        { src: "/earrings-collection.png", alt: "Earrings Collection", label: "Earrings" }
+        { src: WalletImage.src, alt: "Wallet Collection", label: "Wallets" },
+        { src: LadiesBag.src, alt: "Ladies Bag Collection", label: "Bags" }
       ]
     };
 
-    const newInCategory = { 
-      name: "New in", 
-      href: "/category/new-in",
-      submenuItems: [
-        "This Week's Arrivals",
-        "Spring Collection",
-        "Featured Designers",
-        "Limited Edition",
-        "Pre-Orders"
-      ],
-      images: [
-        { src: "/arcus-bracelet.png", alt: "Arcus Bracelet", label: "Arcus Bracelet" },
-        { src: "/span-bracelet.png", alt: "Span Bracelet", label: "Span Bracelet" }
-      ]
-    };
+    // const newInCategory = { 
+    //   name: "New in", 
+    //   href: "/category/new-in",
+    //   submenuItems: [
+    //     "This Week's Arrivals",
+    //     "Spring Collection",
+    //     "Featured Designers",
+    //     "Limited Edition",
+    //     "Pre-Orders"
+    //   ],
+    //   images: [
+    //     { src: "/arcus-bracelet.png", alt: "Arcus Bracelet", label: "Arcus Bracelet" },
+    //     { src: "/span-bracelet.png", alt: "Span Bracelet", label: "Span Bracelet" }
+    //   ]
+    // };
 
     const aboutCategory = { 
       name: "About", 
@@ -145,7 +147,11 @@ const Navigation = () => {
       ]
     };
 
-    return [shopCategory, newInCategory, aboutCategory];
+    return [
+      shopCategory, 
+      // newInCategory, 
+      aboutCategory
+    ];
   };
 
   const navItems = getNavItemsFromCategories();

@@ -210,7 +210,6 @@ const formatPrice = (priceInCents: number): string => {
 };
 
 const ProductGrid = ({ products, isLoading, error }: ProductGridProps) => {
-  // const { data: products = [], isLoading, error } = useGetProductsQuery({ category_slug: category });
 
   if (isLoading) {
     return (
