@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -20,13 +21,26 @@ import {
   ExternalLink,
   Store,
   BarChart3,
+  ChevronDown,
+  ChevronRight,
+  Layers,
 } from "lucide-react";
 
-interface NavItem {
+interface NavLeaf {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   href: string;
+  children?: never;
 }
+
+interface NavParent {
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href?: never;
+  children: NavLeaf[];
+}
+
+type NavItem = NavLeaf | NavParent;
 
 interface NavSection {
   title: string;
@@ -41,7 +55,14 @@ const navigation: NavSection[] = [
       { label: "Order Management", icon: ClipboardList, href: "/admin/orders" },
       { label: "Customers", icon: Users, href: "/admin/customers" },
       { label: "Coupon Code", icon: Tag, href: "/admin/coupons" },
-      { label: "Categories", icon: FolderOpen, href: "/admin/categories" },
+      {
+        label: "Categories",
+        icon: FolderOpen,
+        children: [
+          { label: "All Categories", icon: List, href: "/admin/categories" },
+          { label: "Attributes", icon: Layers, href: "/admin/categories/attributes" },
+        ],
+      },
       { label: "Transaction", icon: Receipt, href: "/admin/transactions" },
       { label: "Brand", icon: Briefcase, href: "/admin/brands" },
     ],
@@ -71,8 +92,30 @@ const navigation: NavSection[] = [
 export function AdminSidebar() {
   const pathname = usePathname();
 
-  const isActive = (href: string) => {
+  const hasActiveChild = (item: NavItem): boolean => {
+    if (!item.children) return false;
+    return item.children.some((child) => pathname.startsWith(child.href));
+  };
+
+  const [openAccordions, setOpenAccordions] = useState<Record<string, boolean>>(
+    () =>
+      navigation.reduce<Record<string, boolean>>((acc, section) => {
+        section.items.forEach((item) => {
+          if (item.children) {
+            acc[item.label] = hasActiveChild(item);
+          }
+        });
+        return acc;
+      }, {})
+  );
+
+  const toggleAccordion = (label: string) => {
+    setOpenAccordions((prev) => ({ ...prev, [label]: !prev[label] }));
+  };
+
+  const isLeafActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin";
+    if (href === "/admin/categories") return pathname.startsWith("/admin/categories") && !pathname.startsWith("/admin/categories/attributes");
     return pathname.startsWith(href);
   };
 
@@ -97,8 +140,58 @@ export function AdminSidebar() {
             </p>
             <ul className="space-y-0.5">
               {section.items.map((item) => {
-                const active = isActive(item.href);
                 const Icon = item.icon;
+
+                if (item.children) {
+                  const isOpen = openAccordions[item.label] ?? false;
+                  const parentHasActive = hasActiveChild(item);
+                  return (
+                    <li key={item.label}>
+                      <button
+                        onClick={() => toggleAccordion(item.label)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                          parentHasActive
+                            ? "text-[var(--admin-brand-primary)] bg-[var(--admin-accent)]"
+                            : "text-[var(--admin-text-primary)] hover:bg-[var(--admin-accent)]"
+                        }`}
+                        aria-expanded={isOpen}
+                      >
+                        <Icon className="w-[18px] h-[18px] shrink-0" />
+                        <span className="flex-1 text-left">{item.label}</span>
+                        {isOpen ? (
+                          <ChevronDown className="w-3.5 h-3.5 text-[var(--admin-grey)]" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5 text-[var(--admin-grey)]" />
+                        )}
+                      </button>
+                      {isOpen && (
+                        <ul className="mt-0.5 ml-4 pl-2 border-l border-[var(--admin-border-light)] space-y-0.5">
+                          {item.children.map((child) => {
+                            const ChildIcon = child.icon;
+                            const childActive = isLeafActive(child.href);
+                            return (
+                              <li key={child.href}>
+                                <Link
+                                  href={child.href}
+                                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    childActive
+                                      ? "bg-[var(--admin-brand-primary)] text-white"
+                                      : "text-[var(--admin-text-primary)] hover:bg-[var(--admin-accent)]"
+                                  }`}
+                                >
+                                  <ChildIcon className="w-[16px] h-[16px] shrink-0" />
+                                  {child.label}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                }
+
+                const active = isLeafActive(item.href);
                 return (
                   <li key={item.href}>
                     <Link

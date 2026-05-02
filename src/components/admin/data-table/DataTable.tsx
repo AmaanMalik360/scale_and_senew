@@ -38,7 +38,7 @@ export function DataTable<T extends Record<string, any>>({
     selectable && data.length > 0 && selectedRows?.size === data.length;
 
   return (
-    <div className="admin-card overflow-hidden">
+    <div className="admin-card">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--admin-border-light)]">
         {/* Left: Tabs */}

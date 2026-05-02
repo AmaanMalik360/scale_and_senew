@@ -1,4 +1,5 @@
 import { baseApi } from "./base-api";
+import { ApiResponse } from "./types";
 
 export interface Product {
   id: string;
@@ -58,6 +59,10 @@ export interface PaginatedProductsResponse {
   limit: number;
 }
 
+export interface ProductResponse extends ApiResponse<Product> {}
+export interface ProductWithCategoryResponse extends ApiResponse<ProductWithCategory> {}
+export interface PaginatedProductsResponseWrapper extends ApiResponse<PaginatedProductsResponse> {}
+
 export const productsApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getProducts: build.query<PaginatedProductsResponse, GetProductsParams>({
@@ -79,10 +84,12 @@ export const productsApi = baseApi.injectEndpoints({
         }
         return `/products?${searchParams.toString()}`;
       },
+      transformResponse: (response: PaginatedProductsResponseWrapper) => response.data,
       providesTags: ["Products"],
     }),
     getProduct: build.query<ProductWithCategory, string>({
       query: (productId) => `products/${productId}`,
+      transformResponse: (response: ProductWithCategoryResponse) => response.data,
       providesTags: (result, error, productId) => [
         { type: "Products", id: productId },
       ],
@@ -93,6 +100,7 @@ export const productsApi = baseApi.injectEndpoints({
         method: "POST",
         body: product,
       }),
+      transformResponse: (response: ProductResponse) => response.data,
       invalidatesTags: ["Products"],
     }),
     updateProduct: build.mutation<Product, { productId: string; product: ProductUpdate }>({
@@ -101,6 +109,7 @@ export const productsApi = baseApi.injectEndpoints({
         method: "PUT",
         body: product,
       }),
+      transformResponse: (response: ProductResponse) => response.data,
       invalidatesTags: (result, error, { productId }) => [
         { type: "Products", id: productId },
         "Products",

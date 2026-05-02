@@ -11,6 +11,7 @@ const pathToTitle: Record<string, string> = {
   "/admin/customers": "Customers",
   "/admin/coupons": "Coupon Code",
   "/admin/categories": "Categories",
+  "/admin/categories/attributes": "Attributes",
   "/admin/transactions": "Transaction",
   "/admin/brands": "Brand",
   "/admin/products/add": "Add Products",
@@ -26,7 +27,13 @@ export function AdminNavbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
-  const title = pathToTitle[pathname] || "Dashboard";
+  const getTitle = () => {
+    if (pathToTitle[pathname]) return pathToTitle[pathname];
+    if (pathname.startsWith("/admin/categories/attributes/")) return "Attribute Detail";
+    if (pathname.startsWith("/admin/categories/")) return "Categories";
+    return "Dashboard";
+  };
+  const title = getTitle();
 
   return (
     <header className="h-16 bg-[var(--admin-bg-white)] border-b border-[var(--admin-border-light)] flex items-center justify-between px-6 shrink-0">

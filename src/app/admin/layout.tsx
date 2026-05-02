@@ -25,7 +25,7 @@ export default function AdminLayout({
         <AdminSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <AdminNavbar />
-          <main className="flex-1 p-6 overflow-auto">{children}</main>
+          <main className="flex-1 p-6">{children}</main>
         </div>
       </StoreProvider>
     </div>

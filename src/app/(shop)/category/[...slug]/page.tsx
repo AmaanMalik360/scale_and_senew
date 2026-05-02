@@ -60,15 +60,13 @@ export default function CategoryPage() {
   const flatCategories = useFlatCategories(categories);
   const currentCategory = flatCategories.find(c => c.slug === currentSlug);
   
-  // Find root category for filterable attributes
-  const rootCategory = flatCategories.find(c => c.slug === slugArray[0]);
   const selectedSubcategoryIds = useSelectedSubcategoryIds(flatCategories, selectedSubcategorySlugs);
 
   // Collect attribute value IDs from URL params
   const reservedKeys = new Set(["subcategories", "price", "sort_by"]);
   const attributeValueIds = useMemo(() => {
     const ids: number[] = [];
-    (rootCategory?.filterable_attributes ?? []).forEach(attr => {
+    (currentCategory?.filterable_attributes ?? []).forEach(attr => {
       const values = searchParams.getAll(attr.name);
       values.forEach(v => {
         const numValue = Number(v);
@@ -76,7 +74,7 @@ export default function CategoryPage() {
       });
     });
     return ids;
-  }, [searchParams, rootCategory]);
+  }, [searchParams, currentCategory]);
 
   const { data: productsResponse, isLoading, error } = useGetProductsQuery({
     ...(selectedSubcategoryIds?.length
@@ -115,7 +113,7 @@ export default function CategoryPage() {
     });
     
     // Dynamic attribute filters from API
-    (rootCategory?.filterable_attributes ?? []).forEach(attr => {
+    (currentCategory?.filterable_attributes ?? []).forEach(attr => {
       configs.push({
         type: "checkbox",
         key: attr.name,
@@ -128,7 +126,7 @@ export default function CategoryPage() {
     });
     
     return configs;
-  }, [childCategories, rootCategory]);
+  }, [childCategories, currentCategory]);
 
   const activeFilters = useMemo(() => {
     const result: FilterStateItem[] = [];

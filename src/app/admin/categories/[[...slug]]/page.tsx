@@ -20,13 +20,14 @@ import {
 import {
   useGetCategoriesQuery,
   useDeleteCategoryMutation,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
   Category,
 } from "@/state/categories-api";
 import {
   useGetProductsQuery,
   useDeleteProductMutation,
   ProductWithCategory,
-  PaginatedProductsResponse,
 } from "@/state/products-api";
 import { getImageUrl } from "@/lib/utils";
 import {
@@ -34,6 +35,11 @@ import {
   useCategoryPath,
   useChildCategories,
 } from "@/app/(shop)/category/[...slug]/hooks";
+import { CategoryFormData, CategoryFormModal } from "@/components/admin/modals/CategoryFormModal";
+import {
+  useGetAttributesQuery,
+  useAssignAttributesToCategoryMutation,
+} from "@/state/attributes-api";
 
 const DEFAULT_ITEMS_PER_PAGE = 5;
 
@@ -57,6 +63,8 @@ export default function CategoriesPage() {
   const [pageSize, setPageSize] = useState(DEFAULT_ITEMS_PER_PAGE);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   const { data: categories = [], isLoading: categoriesLoading } =
     useGetCategoriesQuery({slug: 'fashion'});
@@ -100,6 +108,11 @@ export default function CategoriesPage() {
 
   const [deleteProduct] = useDeleteProductMutation();
   const [deleteCategory] = useDeleteCategoryMutation();
+  const [createCategory, { isLoading: isCreatingCategory }] = useCreateCategoryMutation();
+  const [updateCategory, { isLoading: isUpdatingCategory }] = useUpdateCategoryMutation();
+  const [assignAttributes] = useAssignAttributesToCategoryMutation();
+
+  const { data: attributes = [] } = useGetAttributesQuery();
 
   const totalPages = Math.ceil(totalProducts / pageSize) || 1;
 
@@ -132,6 +145,67 @@ export default function CategoriesPage() {
         console.error("Failed to delete product:", error);
       }
     }
+  };
+
+  const handleCreateCategory = async (data: CategoryFormData) => {
+    try {
+      const newCategory = await createCategory({
+        name: data.name,
+        parent_id: data.parent_id,
+      }).unwrap();
+      if (data.attribute_ids?.length && newCategory?.id) {
+        await assignAttributes({
+          categoryId: newCategory.id,
+          attribute_ids: data.attribute_ids,
+        }).unwrap();
+      }
+      setIsModalOpen(false);
+    } catch (error: any) {
+      console.error("Failed to create category:", error);
+      alert(error?.data?.message || "Failed to create category. Please try again.");
+    }
+  };
+
+  const handleUpdateCategory = async (data: CategoryFormData) => {
+    if (!editingCategory) return;
+    try {
+      await updateCategory({
+        categoryId: editingCategory.id,
+        category: { name: data.name, parent_id: data.parent_id },
+      }).unwrap();
+      if (data.attribute_ids !== undefined) {
+        await assignAttributes({
+          categoryId: editingCategory.id,
+          attribute_ids: data.attribute_ids,
+        }).unwrap();
+      }
+      setIsModalOpen(false);
+      setEditingCategory(null);
+    } catch (error: any) {
+      console.error("Failed to update category:", error);
+      alert(error?.data?.message || "Failed to update category. Please try again.");
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: number) => {
+    if (confirm("Are you sure you want to delete this category?")) {
+      try {
+        await deleteCategory(categoryId).unwrap();
+      } catch (error) {
+        console.error("Failed to delete category:", error);
+        alert("Failed to delete category. Please try again.");
+      }
+    }
+  };
+
+  const handleEditCategory = (category: Category) => {
+    setEditingCategory(category);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingCategory(null);
   };
 
   const columns: DataTableColumn<ProductWithCategory>[] = [
@@ -245,9 +319,11 @@ export default function CategoriesPage() {
     );
   }
 
+  console.log("editingCategory", editingCategory);
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-2 justify-between">
         <div className="flex items-center gap-4">
           {currentCategory && (
             <button
@@ -262,7 +338,10 @@ export default function CategoriesPage() {
           </h2>
         </div>
         <div className="flex items-center gap-3">
-          <button className="admin-btn-primary">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="admin-btn-primary"
+          >
             <Plus className="w-4 h-4" />
             Add Category
           </button>
@@ -303,11 +382,23 @@ export default function CategoriesPage() {
       <div className="relative">
         <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
           {displayCategories.map((cat) => (
-            <CategoryCard 
-              key={cat.id} 
-              name={cat.name} 
-              slug={cat.slug} 
-              onClick={handleCategoryClick} 
+            <CategoryCard
+              key={cat.id}
+              name={cat.name}
+              slug={cat.slug}
+              onClick={handleCategoryClick}
+              actions={[
+                {
+                  icon: <Pencil className="w-4 h-4" />,
+                  name: "Edit",
+                  handler: () => handleEditCategory(cat),
+                },
+                {
+                  icon: <Trash2 className="w-4 h-4" />,
+                  name: "Delete",
+                  handler: () => handleDeleteCategory(cat.id),
+                },
+              ]}
             />
           ))}
         </div>
@@ -342,6 +433,21 @@ export default function CategoriesPage() {
         onFilter={() => {}}
         onAdd={() => {}}
         onMore={() => {}}
+      />
+
+      <CategoryFormModal
+        open={isModalOpen}
+        onOpenChange={handleModalClose}
+        onSubmit={editingCategory ? handleUpdateCategory : handleCreateCategory}
+        categories={categories}
+        attributes={attributes}
+        initialData={editingCategory ? {
+          name: editingCategory.name,
+          parent_id: editingCategory.parent_id,
+          attribute_ids: editingCategory.filterable_attributes?.map(attr => attr.id) || [],
+        } : undefined}
+        isLoading={editingCategory ? isUpdatingCategory : isCreatingCategory}
+        mode={editingCategory ? "edit" : "create"}
       />
     </div>
   );

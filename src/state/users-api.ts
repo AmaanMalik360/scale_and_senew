@@ -1,4 +1,5 @@
 import { baseApi } from "./base-api";
+import { ApiResponse } from "./types";
 
 export interface User {
   id: string;
@@ -27,6 +28,9 @@ export interface UsersQueryParams {
   limit?: number;
 }
 
+export interface UserResponse extends ApiResponse<User> {}
+export interface UsersListResponse extends ApiResponse<User[]> {}
+
 export const usersApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getUsers: build.query<User[], UsersQueryParams>({
@@ -34,16 +38,19 @@ export const usersApi = baseApi.injectEndpoints({
         url: "users",
         params: params,
       }),
+      transformResponse: (response: UsersListResponse) => response.data,
       providesTags: ["Users"],
     }),
     getUser: build.query<User, string>({
       query: (userId) => `users/${userId}`,
+      transformResponse: (response: UserResponse) => response.data,
       providesTags: (result, error, userId) => [
         { type: "Users", id: userId },
       ],
     }),
     getUserByEmail: build.query<User, string>({
       query: (email) => `users/email/${email}`,
+      transformResponse: (response: UserResponse) => response.data,
       providesTags: (result, error, email) => [
         { type: "Users", id: `email-${email}` },
       ],
@@ -54,6 +61,7 @@ export const usersApi = baseApi.injectEndpoints({
         method: "POST",
         body: user,
       }),
+      transformResponse: (response: UserResponse) => response.data,
       invalidatesTags: ["Users"],
     }),
     updateUser: build.mutation<User, { userId: string; user: UserUpdate }>({
@@ -62,6 +70,7 @@ export const usersApi = baseApi.injectEndpoints({
         method: "PUT",
         body: user,
       }),
+      transformResponse: (response: UserResponse) => response.data,
       invalidatesTags: (result, error, { userId }) => [
         { type: "Users", id: userId },
         "Users",
