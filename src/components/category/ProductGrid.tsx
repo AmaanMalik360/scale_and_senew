@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "../ui/card";
 import Link from "next/link";
-import Pagination from "./Pagination";
+import Pagination, { PaginationProps } from "./Pagination";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
 import haloImage from "@/assets/halo.jpg";
@@ -201,7 +201,8 @@ import { getImageUrl } from "@/lib/utils";
 interface ProductGridProps {
   products: ProductWithCategory[];
   isLoading: boolean;
-  error: unknown
+  error: unknown;
+  pagination: PaginationProps;
 }
 
 // Helper function to format price from cents to euros
@@ -209,7 +210,7 @@ const formatPrice = (priceInCents: number): string => {
   return `€${(priceInCents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 };
 
-const ProductGrid = ({ products, isLoading, error }: ProductGridProps) => {
+const ProductGrid = ({ products, isLoading, error, pagination }: ProductGridProps) => {
 
   if (isLoading) {
     return (
@@ -285,7 +286,7 @@ const ProductGrid = ({ products, isLoading, error }: ProductGridProps) => {
         })}
       </div>
 
-      <Pagination />
+      <Pagination {...pagination} />
     </section>
   );
 };

@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import * as Label from "@radix-ui/react-label";
-import { Modal, ModalSize } from "./Modal";
+import { Modal, ModalSize } from "../Modal";
 import { Category } from "@/state/categories-api";
 import { CategorySelectDropdown } from "@/components/admin/dropdown/CategorySelectDropdown";
 import { Attribute } from "@/state/attributes-api";

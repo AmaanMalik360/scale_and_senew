@@ -30,9 +30,10 @@ const CategoryHeader = ({ currentCategory, categoryPath, availableChildren }: Ca
                   <Link href="/">Home</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
+              
               {categoryPath.map((category, index) => (
                 <div key={category.id} className="flex items-center">
+                  <BreadcrumbSeparator className="mx-2 mt-1" />
                   <BreadcrumbItem>
                     {index === categoryPath.length - 1 ? (
                       <BreadcrumbPage>{category.name}</BreadcrumbPage>
@@ -42,7 +43,6 @@ const CategoryHeader = ({ currentCategory, categoryPath, availableChildren }: Ca
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>
-                  {index < categoryPath.length - 1 && <BreadcrumbSeparator />}
                 </div>
               ))}
             </BreadcrumbList>

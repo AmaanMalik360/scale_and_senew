@@ -16,6 +16,9 @@ import {
   useChildCategories
 } from "./hooks";
 
+const DEFAULT_PAGE_SIZE = 5;
+const PAGE_SIZE_OPTIONS = [2, 5, 10, 20, 50];
+
 const PRICE_OPTIONS = [
   { 
     label: "Under €10", 
@@ -48,6 +51,11 @@ export default function CategoryPage() {
   const slugArray = (params.slug as string[]) ?? [];
   const currentSlug = slugArray[slugArray.length - 1];
   
+  // Pagination from URL
+  const currentPage = Number(searchParams.get("page") ?? "1");
+  const pageSize = Number(searchParams.get("page_size") ?? String(DEFAULT_PAGE_SIZE));
+  const skip = (currentPage - 1) * pageSize;
+
   // applied filters
   const selectedSubcategorySlugs = searchParams.getAll("subcategories");
   const sortBy = searchParams.get("sort_by") ?? "featured";
@@ -82,12 +90,29 @@ export default function CategoryPage() {
       : { category_slug: currentSlug }
     ),
     sort_by: sortBy,
+    skip,
+    limit: pageSize,
     ...(searchParams.get('min_price') && { min_price: Number(searchParams.get('min_price')) }),
     ...(searchParams.get('max_price') && { max_price: Number(searchParams.get('max_price')) }),
     ...(attributeValueIds.length && { attribute_value_ids: attributeValueIds }),
   });
 
   const products = productsResponse?.data || [];
+  const totalProducts = productsResponse?.total || 0;
+  const totalPages = Math.ceil(totalProducts / pageSize) || 1;
+
+  const handlePageChange = useCallback((page: number) => {
+    const next = new URLSearchParams(searchParams.toString());
+    next.set("page", String(page));
+    router.push(`?${next.toString()}`, { scroll: false });
+  }, [router, searchParams]);
+
+  const handlePageSizeChange = useCallback((size: number) => {
+    const next = new URLSearchParams(searchParams.toString());
+    next.set("page_size", String(size));
+    next.set("page", "1");
+    router.push(`?${next.toString()}`, { scroll: false });
+  }, [router, searchParams]);
 
   const categoryPath = useCategoryPath(flatCategories, currentCategory); // categories/wallets/bi-fold
   const childCategories = useChildCategories(currentCategory); // return child categories (bi-fold, slim-wallets, etc.) if current category is wallets
@@ -181,6 +206,7 @@ export default function CategoryPage() {
       }
     });
     
+    next.set("page", "1");
     router.push(`?${next.toString()}`, { scroll: false });
   }, [router, searchParams, filterConfig]);
 
@@ -201,7 +227,19 @@ export default function CategoryPage() {
         activeFilters={activeFilters}
         onFiltersChange={handleFiltersChange}
       />
-      <ProductGrid products={products} isLoading={isLoading} error={error} />
+      <ProductGrid
+        products={products}
+        isLoading={isLoading}
+        error={error}
+        pagination={{
+          currentPage,
+          totalPages,
+          pageSize,
+          pageSizeOptions: PAGE_SIZE_OPTIONS,
+          onPageChange: handlePageChange,
+          onPageSizeChange: handlePageSizeChange,
+        }}
+      />
     </main>
   );
 }

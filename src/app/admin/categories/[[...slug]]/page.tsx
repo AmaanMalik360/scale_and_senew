@@ -35,7 +35,7 @@ import {
   useCategoryPath,
   useChildCategories,
 } from "@/app/(shop)/category/[...slug]/hooks";
-import { CategoryFormData, CategoryFormModal } from "@/components/admin/modals/CategoryFormModal";
+import { CategoryFormData, CategoryFormModal } from "@/components/admin/modals/categories/CategoryFormModal";
 import {
   useGetAttributesQuery,
   useAssignAttributesToCategoryMutation,

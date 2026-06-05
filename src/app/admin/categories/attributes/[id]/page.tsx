@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Plus, ArrowLeft } from "lucide-react";
+import { Plus, ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import { DataTable } from "@/components/admin/data-table";
 import { DataTableColumn } from "@/components/admin/data-table/types";
-import { Modal } from "@/components/admin/modals/Modal";
+import { AttributeValueFormModal, AttributeValueFormData, DeleteConfirmModal } from "@/components/admin/modals";
 import { useGetCategoriesQuery } from "@/state/categories-api";
+import { useGetAttributeQuery } from "@/state/attributes-api";
 import {
-  useGetAttributeQuery,
   useCreateAttributeValueMutation,
+  useUpdateAttributeValueMutation,
+  useDeleteAttributeValueMutation,
   AttributeValue,
-} from "@/state/attributes-api";
+} from "@/state/attribute-values-api";
 
 export default function AttributeDetailPage() {
   const params = useParams();
@@ -21,39 +23,47 @@ export default function AttributeDetailPage() {
   const { data: attribute, isLoading } = useGetAttributeQuery(attributeId);
   const { data: categories = [] } = useGetCategoriesQuery({});
   const [createAttributeValue, { isLoading: isCreating }] = useCreateAttributeValueMutation();
+  const [updateAttributeValue, { isLoading: isUpdating }] = useUpdateAttributeValueMutation();
+  const [deleteAttributeValue, { isLoading: isDeleting }] = useDeleteAttributeValueMutation();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newValue, setNewValue] = useState("");
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
-  const [valueError, setValueError] = useState("");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
-    setNewValue("");
-    setSelectedCategoryId(null);
-    setValueError("");
-    setIsModalOpen(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingValue, setEditingValue] = useState<AttributeValue | null>(null);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletingValue, setDeletingValue] = useState<AttributeValue | null>(null);
+
+  const handleCreateValue = async (data: AttributeValueFormData) => {
+    await createAttributeValue({ attributeId, value: data }).unwrap();
+    setIsCreateModalOpen(false);
   };
 
-  const handleCreateValue = async () => {
-    if (!newValue.trim()) {
-      setValueError("Value is required");
-      return;
-    }
+  const handleUpdateValue = async (data: AttributeValueFormData) => {
+    if (!editingValue) return;
+    await updateAttributeValue({ valueId: editingValue.id, attributeId, value: data }).unwrap();
+    setIsEditModalOpen(false);
+    setEditingValue(null);
+  };
+
+  const handleDeleteValue = async () => {
+    if (!deletingValue) return;
     try {
-      await createAttributeValue({
-        attributeId,
-        value: {
-          value: newValue.trim(),
-          category_id: selectedCategoryId,
-        },
-      }).unwrap();
-      setIsModalOpen(false);
-      setNewValue("");
-      setSelectedCategoryId(null);
-      setValueError("");
-    } catch (error: any) {
-      setValueError(error?.data?.detail || "Failed to create attribute value");
+      await deleteAttributeValue({ valueId: deletingValue.id, attributeId }).unwrap();
+    } finally {
+      setIsDeleteModalOpen(false);
+      setDeletingValue(null);
     }
+  };
+
+  const handleOpenEditModal = (attrValue: AttributeValue) => {
+    setEditingValue(attrValue);
+    setIsEditModalOpen(true);
+  };
+
+  const handleOpenDeleteModal = (attrValue: AttributeValue) => {
+    setDeletingValue(attrValue);
+    setIsDeleteModalOpen(true);
   };
 
   const getCategoryName = (categoryId: number | null | undefined): string => {
@@ -116,6 +126,35 @@ export default function AttributeDetailPage() {
         </span>
       ),
     },
+    {
+      key: "actions",
+      label: "Action",
+      width: "100px",
+      render: (_value, row) => (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpenEditModal(row);
+            }}
+            className="admin-icon-btn"
+            aria-label={`Edit value ${row.value}`}
+          >
+            <Pencil className="w-4 h-4" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpenDeleteModal(row);
+            }}
+            className="admin-icon-btn text-[var(--admin-error)]"
+            aria-label={`Delete value ${row.value}`}
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -139,7 +178,7 @@ export default function AttributeDetailPage() {
           </div>
         </div>
         <button
-          onClick={handleOpenModal}
+          onClick={() => setIsCreateModalOpen(true)}
           className="admin-btn-primary flex items-center gap-2"
           aria-label="Add new attribute value"
         >
@@ -153,107 +192,50 @@ export default function AttributeDetailPage() {
           Loading values...
         </div>
       ) : (
-        <DataTable
-          data={attribute?.values ?? []}
-          columns={columns}
-        />
+        <DataTable data={attribute?.values ?? []} columns={columns} />
       )}
 
-      <Modal
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        title="Add Attribute Value"
-        description={`Add a new value to the "${attribute?.name}" attribute`}
-        size="sm"
-        footer={
-          <>
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              disabled={isCreating}
-              className="admin-btn-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleCreateValue}
-              disabled={isCreating}
-              className="admin-btn-primary"
-            >
-              {isCreating ? "Adding..." : "Add Value"}
-            </button>
-          </>
-        }
-      >
-        <div className="space-y-4">
-          {/* Value input */}
-          <div className="space-y-2">
-            <label
-              htmlFor="attr-value"
-              className="text-body font-medium text-[var(--admin-text-primary)]"
-            >
-              Value <span className="text-[var(--admin-error)]">*</span>
-            </label>
-            <input
-              id="attr-value"
-              type="text"
-              value={newValue}
-              onChange={(e) => {
-                setNewValue(e.target.value);
-                if (valueError) setValueError("");
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleCreateValue();
-              }}
-              placeholder="e.g. Leather, Gold, Large"
-              className="admin-input w-full"
-              autoFocus
-              aria-invalid={!!valueError}
-              aria-describedby={valueError ? "attr-value-error" : undefined}
-            />
-            {valueError && (
-              <p
-                id="attr-value-error"
-                className="text-body-sm text-[var(--admin-error)]"
-                role="alert"
-              >
-                {valueError}
-              </p>
-            )}
-          </div>
+      <AttributeValueFormModal
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        onSubmit={handleCreateValue}
+        attributeName={attribute?.name}
+        flatCategories={flatCategories}
+        isLoading={isCreating}
+        mode="create"
+      />
 
-          {/* Category scope select */}
-          <div className="space-y-2">
-            <label
-              htmlFor="attr-category"
-              className="text-body font-medium text-[var(--admin-text-primary)]"
-            >
-              Scope to Category{" "}
-              <span className="text-[var(--admin-grey)] font-normal">(optional)</span>
-            </label>
-            <select
-              id="attr-category"
-              value={selectedCategoryId ?? ""}
-              onChange={(e) =>
-                setSelectedCategoryId(e.target.value ? Number(e.target.value) : null)
-              }
-              className="admin-input w-full"
-            >
-              <option value="">Global (visible in all categories)</option>
-              {flatCategories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {"  ".repeat(cat.level)}
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-            <p className="text-caption text-[var(--admin-grey)]">
-              Leave empty to make this value global across all categories
-            </p>
-          </div>
-        </div>
-      </Modal>
+      <AttributeValueFormModal
+        open={isEditModalOpen}
+        onOpenChange={(open) => {
+          setIsEditModalOpen(open);
+          if (!open) setEditingValue(null);
+        }}
+        onSubmit={handleUpdateValue}
+        attributeName={attribute?.name}
+        initialData={
+          editingValue
+            ? { value: editingValue.value, category_id: editingValue.category_id ?? null }
+            : undefined
+        }
+        flatCategories={flatCategories}
+        isLoading={isUpdating}
+        mode="edit"
+      />
+
+      <DeleteConfirmModal
+        open={isDeleteModalOpen}
+        onOpenChange={(open) => {
+          setIsDeleteModalOpen(open);
+          if (!open) setDeletingValue(null);
+        }}
+        title="Delete Attribute Value"
+        description={`Are you sure you want to delete the value "${deletingValue?.value}"? This cannot be undone.`}
+        body="Removing this value may affect products that currently use it as a filter option."
+        confirmLabel="Delete Value"
+        isLoading={isDeleting}
+        onConfirm={handleDeleteValue}
+      />
     </div>
   );
 }

@@ -1,16 +1,10 @@
 import { baseApi } from "./base-api";
 import { ApiResponse } from "./types";
+import { AttributeValue } from "./attribute-values-api";
 
 export interface Attribute {
   id: number;
   name: string;
-}
-
-export interface AttributeValue {
-  id: number;
-  attribute_id: number;
-  value: string;
-  category_id?: number | null;
 }
 
 export interface AttributeWithValues extends Attribute {
@@ -21,9 +15,8 @@ export interface AttributeCreate {
   name: string;
 }
 
-export interface AttributeValueCreate {
-  value: string;
-  category_id?: number | null;
+export interface AttributeUpdate {
+  name: string;
 }
 
 export interface AssignAttributesRequest {
@@ -57,20 +50,24 @@ export const attributesApi = baseApi.injectEndpoints({
       transformResponse: (response: AttributeResponse) => response.data,
       invalidatesTags: ["Attributes"],
     }),
-    createAttributeValue: build.mutation<
-      AttributeValue,
-      { attributeId: number; value: AttributeValueCreate }
-    >({
-      query: ({ attributeId, value }) => ({
-        url: `attributes/${attributeId}/values`,
-        method: "POST",
-        body: value,
+    updateAttribute: build.mutation<Attribute, { attributeId: number; attribute: AttributeUpdate }>({
+      query: ({ attributeId, attribute }) => ({
+        url: `attributes/${attributeId}`,
+        method: "PATCH",
+        body: attribute,
       }),
-      transformResponse: (response: ApiResponse<AttributeValue>) => response.data,
+      transformResponse: (response: AttributeResponse) => response.data,
       invalidatesTags: (result, error, { attributeId }) => [
         { type: "Attributes", id: attributeId },
         "Attributes",
       ],
+    }),
+    deleteAttribute: build.mutation<void, number>({
+      query: (attributeId) => ({
+        url: `attributes/${attributeId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Attributes"],
     }),
     assignAttributesToCategory: build.mutation<
       void,
@@ -97,7 +94,8 @@ export const {
   useGetAttributesQuery,
   useGetAttributeQuery,
   useCreateAttributeMutation,
-  useCreateAttributeValueMutation,
+  useUpdateAttributeMutation,
+  useDeleteAttributeMutation,
   useAssignAttributesToCategoryMutation,
   useGetCategoryAttributesQuery,
 } = attributesApi;
