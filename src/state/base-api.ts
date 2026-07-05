@@ -5,17 +5,11 @@ import {
   FetchArgs,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import type { RootState } from "@/app/redux";
+import { logout } from "@/state/auth-slice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_BASE,
-  prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.accessToken;
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
-    return headers;
-  },
+  credentials: "include",
 });
 
 const baseQueryWithReauth: BaseQueryFn<
@@ -23,11 +17,20 @@ const baseQueryWithReauth: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  const result = await baseQuery(args, api, extraOptions);
+  let result = await baseQuery(args, api, extraOptions);
 
-  if (result.error && result.error.status === 401) {
-    // Token expired or invalid - could dispatch logout here
-    // For now, just return the error
+  if (result.error?.status === 401) {
+    const refreshResult = await baseQuery(
+      { url: "users/refresh", method: "POST" },
+      api,
+      extraOptions
+    );
+
+    if (!refreshResult.error) {
+      result = await baseQuery(args, api, extraOptions);
+    } else {
+      api.dispatch(logout());
+    }
   }
 
   return result;

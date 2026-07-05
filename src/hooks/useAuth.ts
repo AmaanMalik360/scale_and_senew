@@ -12,13 +12,14 @@ import {
   useCreateGuestUserMutation,
   useLoginMutation,
   useRegisterMutation,
+  useLogoutUserMutation,
   LoginRequest,
   RegisterRequest,
 } from "@/state/users-api";
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
-  const { user, accessToken, isAuthenticated, isGuest } = useAppSelector(
+  const { user, isAuthenticated, isGuest } = useAppSelector(
     (state) => state.auth
   );
 
@@ -27,6 +28,7 @@ export const useAuth = () => {
   const [loginMutation, { isLoading: isLoggingIn }] = useLoginMutation();
   const [registerMutation, { isLoading: isRegistering }] =
     useRegisterMutation();
+  const [logoutMutation] = useLogoutUserMutation();
 
   const createGuestUser = useCallback(async () => {
     try {
@@ -37,12 +39,7 @@ export const useAuth = () => {
         created_at: result.user.created_at,
         guest_expires_at: result.user.guest_expires_at,
       };
-      dispatch(
-        setGuestUser({
-          user: guestUser,
-          accessToken: result.access_token,
-        })
-      );
+      dispatch(setGuestUser({ user: guestUser }));
       return result;
     } catch (error) {
       console.error("Failed to create guest user:", error);
@@ -62,12 +59,7 @@ export const useAuth = () => {
           created_at: result.user.created_at,
           updated_at: result.user.updated_at,
         };
-        dispatch(
-          setCredentials({
-            user: authUser,
-            accessToken: result.access_token,
-          })
-        );
+        dispatch(setCredentials({ user: authUser }));
         return result;
       } catch (error) {
         console.error("Login failed:", error);
@@ -89,12 +81,7 @@ export const useAuth = () => {
           created_at: result.user.created_at,
           updated_at: result.user.updated_at,
         };
-        dispatch(
-          setCredentials({
-            user: authUser,
-            accessToken: result.access_token,
-          })
-        );
+        dispatch(setCredentials({ user: authUser }));
         return result;
       } catch (error) {
         console.error("Registration failed:", error);
@@ -104,20 +91,25 @@ export const useAuth = () => {
     [registerMutation, dispatch]
   );
 
-  const logout = useCallback(() => {
-    dispatch(logoutAction());
-  }, [dispatch]);
+  const logout = useCallback(async () => {
+    try {
+      await logoutMutation().unwrap();
+    } catch {
+      // Clear local state even if API call fails
+    } finally {
+      dispatch(logoutAction());
+    }
+  }, [logoutMutation, dispatch]);
 
   const ensureUser = useCallback(async () => {
     if (!isAuthenticated) {
       return await createGuestUser();
     }
-    return { user, accessToken };
-  }, [isAuthenticated, createGuestUser, user, accessToken]);
+    return { user };
+  }, [isAuthenticated, createGuestUser, user]);
 
   return {
     user,
-    accessToken,
     isAuthenticated,
     isGuest,
     isLoading: isCreatingGuest || isLoggingIn || isRegistering,

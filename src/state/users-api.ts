@@ -18,16 +18,10 @@ export interface GuestUser {
 }
 
 export interface AuthTokenResponse {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
   user: GuestUser;
 }
 
 export interface LoginResponse {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
   user: User;
 }
 
@@ -149,6 +143,19 @@ export const usersApi = baseApi.injectEndpoints({
       transformResponse: (response: UserResponse) => response.data,
       providesTags: ["Users"],
     }),
+    refreshToken: build.mutation<User, void>({
+      query: () => ({
+        url: "users/refresh",
+        method: "POST",
+      }),
+      transformResponse: (response: UserResponse) => response.data,
+    }),
+    logoutUser: build.mutation<void, void>({
+      query: () => ({
+        url: "users/logout",
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -163,4 +170,6 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useGetCurrentUserQuery,
+  useRefreshTokenMutation,
+  useLogoutUserMutation,
 } = usersApi;
