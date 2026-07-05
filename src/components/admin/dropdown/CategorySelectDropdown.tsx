@@ -31,6 +31,7 @@ export interface CategorySelectDropdownProps {
   placeholder?: string;
   disabled?: boolean;
   description?: string;
+  noneOptionText?: string;
 }
 
 export const CategorySelectDropdown = ({
@@ -42,6 +43,7 @@ export const CategorySelectDropdown = ({
   placeholder = "Select parent category (optional)",
   disabled = false,
   description,
+  noneOptionText = "None (Root Category)",
 }: CategorySelectDropdownProps) => {
   const flatCategories = flattenCategoriesWithLevel(categories);
 
@@ -87,7 +89,7 @@ export const CategorySelectDropdown = ({
                     value="none"
                     className="admin-panel relative flex items-center px-8 py-2 text-body-sm text-[var(--admin-text-primary)] rounded-md outline-none cursor-pointer hover:bg-[var(--admin-accent)] focus:bg-[var(--admin-accent)] data-[state=checked]:bg-[var(--admin-accent)]"
                   >
-                    <Select.ItemText>None (Root Category)</Select.ItemText>
+                    <Select.ItemText>{noneOptionText}</Select.ItemText>
                     <Select.ItemIndicator className="absolute left-2 inline-flex items-center">
                       <Check className="w-4 h-4 text-[var(--admin-brand-primary)]" />
                     </Select.ItemIndicator>

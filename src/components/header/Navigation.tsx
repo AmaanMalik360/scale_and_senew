@@ -1,10 +1,12 @@
 
 "use client";
-import { ArrowRight, X
+import { ArrowRight, X, User, LogOut
   // , Minus, Plus 
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useAppSelector } from "@/app/redux";
+import { useAuth } from "@/hooks/useAuth";
 import { StaticImageData } from "next/image";
 // import { Badge } from "./components/ui/badge";
 // import { Button } from "./components/ui/button";
@@ -28,9 +30,13 @@ interface CartItem {
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
+  const [offCanvasType, setOffCanvasType] = useState<'favorites' | 'account' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
+  
+  // Auth state
+  const { isAuthenticated, isGuest, user } = useAppSelector((state) => state.auth);
+  const { logout } = useAuth();
   
   // Fetch categories from API
   const { data: categories, isLoading, error } = useGetCategoriesQuery({slug: 'fashion'});
@@ -233,6 +239,13 @@ const Navigation = () => {
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
+          </button>
+          <button 
+            className="hidden lg:block p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
+            aria-label="Account"
+            onClick={() => setOffCanvasType('account')}
+          >
+            <User className="w-5 h-5" />
           </button>
           <button 
             className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
@@ -451,6 +464,102 @@ const Navigation = () => {
               <p className="text-muted-foreground text-sm mb-6">
                 You haven't added any favorites yet. Browse our collection and click the heart icon to save items you love.
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Account Off-canvas */}
+      {offCanvasType === 'account' && (
+        <div className="fixed inset-0 z-50 h-screen">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50 h-screen"
+            onClick={() => setOffCanvasType(null)}
+          />
+          
+          {/* Off-canvas panel */}
+          <div className="absolute right-0 top-0 h-screen w-96 bg-background border-l border-border animate-slide-in-right flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <h2 className="text-lg font-light text-foreground">Account</h2>
+              <button
+                onClick={() => setOffCanvasType(null)}
+                className="p-2 text-foreground hover:text-muted-foreground transition-colors"
+                aria-label="Close"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && setOffCanvasType(null)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            {/* Content */}
+            <div className="p-6 flex-1">
+              {isAuthenticated && !isGuest ? (
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                      <User className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <p className="font-medium text-foreground">{user?.name || user?.email}</p>
+                    <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Link
+                      href="/account/orders"
+                      className="block w-full text-left px-4 py-3 rounded-md hover:bg-muted transition-colors text-sm"
+                      onClick={() => setOffCanvasType(null)}
+                    >
+                      Order History
+                    </Link>
+                    <Link
+                      href="/account/settings"
+                      className="block w-full text-left px-4 py-3 rounded-md hover:bg-muted transition-colors text-sm"
+                      onClick={() => setOffCanvasType(null)}
+                    >
+                      Account Settings
+                    </Link>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      logout();
+                      setOffCanvasType(null);
+                    }}
+                    className="flex items-center gap-2 w-full px-4 py-3 text-sm text-destructive hover:bg-destructive/10 rounded-md transition-colors"
+                    tabIndex={0}
+                    aria-label="Sign out"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign out
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <p className="text-muted-foreground text-sm">
+                    Sign in to access your account, view orders, and manage your preferences.
+                  </p>
+                  
+                  <div className="space-y-3">
+                    <Link
+                      href="/signin"
+                      className="block w-full text-center px-4 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
+                      onClick={() => setOffCanvasType(null)}
+                    >
+                      Sign in
+                    </Link>
+                    <Link
+                      href="/signup"
+                      className="block w-full text-center px-4 py-3 border border-border rounded-md hover:bg-muted transition-colors text-sm"
+                      onClick={() => setOffCanvasType(null)}
+                    >
+                      Create account
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

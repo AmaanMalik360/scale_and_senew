@@ -13,6 +13,13 @@ import {
   BreadcrumbPage, 
   BreadcrumbSeparator 
 } from "../../../../components/ui/breadcrumb";
+import { useCategoryPath } from "../../category/[...slug]/hooks";
+import { useChildCategories } from "../../category/[...slug]/hooks";
+import { useFlatCategories } from "../../category/[...slug]/hooks";
+import { useGetCategoriesQuery } from "@/state/categories-api";
+import { useParams } from "next/navigation";
+import { useGetProductQuery } from "@/state/products-api";
+import CategoryHeader from "@/components/category/CategoryHeader";
 
 interface ProductDetailPageProps {
   params: {
@@ -20,44 +27,50 @@ interface ProductDetailPageProps {
   };
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
+export default function ProductDetailPage() {
+  const params = useParams();
+  const productId = params.productId as string;
+  console.log("productId", productId);
+  const { data: categories = [], isLoading: categoriesLoading } =
+      useGetCategoriesQuery({slug: 'fashion'});
+
+  const { data: product, isLoading: productLoading } =
+      useGetProductQuery(productId);
+  console.log("product", product);
+  const flatCategories = useFlatCategories(categories);
+  const categoryPath = useCategoryPath(flatCategories, product?.category); // categories/wallets/bi-fold
+  const childCategories = useChildCategories(product?.category); 
+
+  console.log("categoryPath", categoryPath);
+  console.log("childCategories", childCategories);
+
   return (
     <main className="pt-6">
       <section className="w-full px-6">
         {/* Breadcrumb - Show above image on smaller screens */}
         <div className="lg:hidden mb-6">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/">Home</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/category/earrings">Earrings</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Pantheon</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <CategoryHeader
+            currentCategory={product?.category ?? { id: 0, name: "All Products", slug: "all", children: [], filterable_attributes: [] }}
+            categoryPath={categoryPath}
+            availableChildren={childCategories}
+          />
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <ProductImageGallery />
           
           <div className="lg:pl-12 mt-8 lg:mt-0 lg:sticky lg:top-6 lg:h-fit">
-            <ProductInfo />
+            <ProductInfo 
+              currentCategory={product?.category}
+              categoryPath={categoryPath}
+              availableChildren={childCategories}
+            />
             <ProductDescription />
           </div>
         </div>
       </section>
       
-      <section className="w-full mt-16 lg:mt-24">
+      {/* <section className="w-full mt-16 lg:mt-24">
         <div className="mb-4 px-6">
           <h2 className="text-sm font-light text-foreground">You might also like</h2>
         </div>
@@ -69,7 +82,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           <h2 className="text-sm font-light text-foreground">Our other Earrings</h2>
         </div>
         <ProductCarousel />
-      </section>
+      </section> */}
     </main>
   );
 }

@@ -214,11 +214,13 @@ export default function CategoryPage() {
 
   return (
     <main className="pt-6">
-      <CategoryHeader
-        currentCategory={currentCategory ?? { id: 0, name: "All Products", slug: "all", children: [], filterable_attributes: [] }}
-        categoryPath={categoryPath}
-        availableChildren={childCategories}
-      />
+      <div className="px-6">
+        <CategoryHeader
+          currentCategory={currentCategory ?? { id: 0, name: "All Products", slug: "all", children: [], filterable_attributes: [] }}
+          categoryPath={categoryPath}
+          availableChildren={childCategories}
+        />
+      </div>
       <FilterSortBar
         filtersOpen={filtersOpen}
         setFiltersOpen={setFiltersOpen}

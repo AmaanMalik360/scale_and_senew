@@ -15,13 +15,14 @@ interface CategoryHeaderProps {
   currentCategory: Category;
   categoryPath: Category[];
   availableChildren: Category[];
+  showName?: boolean;
 }
 
-const CategoryHeader = ({ currentCategory, categoryPath, availableChildren }: CategoryHeaderProps) => {
+const CategoryHeader = ({ currentCategory, categoryPath, availableChildren, showName = false }: CategoryHeaderProps) => {
   const capitalizedCategory = currentCategory.name.charAt(0).toUpperCase() + currentCategory.name.slice(1);
   
   return (
-    <section className="w-full px-6 mb-8">
+    <section className="w-full mb-8">
         <div className="mb-6">
           <Breadcrumb>
             <BreadcrumbList>
@@ -67,11 +68,13 @@ const CategoryHeader = ({ currentCategory, categoryPath, availableChildren }: Ca
           </div>
         )}
         
-        <div>
-          <h1 className="text-3xl md:text-4xl font-light text-foreground">
-            {capitalizedCategory}
-          </h1>
-        </div>
+        {showName && (
+          <div>
+            <h1 className="text-3xl md:text-4xl font-light text-foreground">
+              {capitalizedCategory}
+            </h1>
+          </div>
+        )}
     </section>
   );
 };

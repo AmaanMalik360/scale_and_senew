@@ -12,8 +12,16 @@ import {
   BreadcrumbSeparator 
 } from "../ui/breadcrumb";
 import { Minus, Plus } from "lucide-react";
+import CategoryHeader from "../category/CategoryHeader";
+import { Category } from "@/state/categories-api";
 
-const ProductInfo = () => {
+interface ProductInfoProps {
+  currentCategory?: Category;
+  categoryPath: Category[];
+  availableChildren: Category[];
+}
+
+const ProductInfo = ({ currentCategory, categoryPath, availableChildren }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
 
   const incrementQuantity = () => setQuantity(prev => prev + 1);
@@ -23,25 +31,13 @@ const ProductInfo = () => {
     <div className="space-y-6">
       {/* Breadcrumb - Show only on desktop */}
       <div className="hidden lg:block">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/">Home</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/category/earrings">Earrings</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Pantheon</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        {currentCategory && (
+          <CategoryHeader
+            currentCategory={currentCategory}
+            categoryPath={categoryPath}
+            availableChildren={availableChildren}
+          />
+        )}
       </div>
 
       {/* Product title and price */}

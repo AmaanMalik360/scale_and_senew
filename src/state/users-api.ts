@@ -3,11 +3,43 @@ import { ApiResponse } from "./types";
 
 export interface User {
   id: string;
-  email: string;
-  name?: string;
+  email?: string | null;
+  name?: string | null;
   is_guest: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface GuestUser {
+  id: string;
+  is_guest: boolean;
+  created_at: string;
+  guest_expires_at?: string | null;
+}
+
+export interface AuthTokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  user: GuestUser;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  user: User;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  name?: string;
 }
 
 export interface UserCreate {
@@ -86,6 +118,37 @@ export const usersApi = baseApi.injectEndpoints({
         "Users",
       ],
     }),
+    createGuestUser: build.mutation<AuthTokenResponse, void>({
+      query: () => ({
+        url: "users/guest",
+        method: "POST",
+      }),
+      transformResponse: (response: ApiResponse<AuthTokenResponse>) =>
+        response.data,
+    }),
+    login: build.mutation<LoginResponse, LoginRequest>({
+      query: (credentials) => ({
+        url: "users/login",
+        method: "POST",
+        body: credentials,
+      }),
+      transformResponse: (response: ApiResponse<LoginResponse>) =>
+        response.data,
+    }),
+    register: build.mutation<LoginResponse, RegisterRequest>({
+      query: (data) => ({
+        url: "users/register",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response: ApiResponse<LoginResponse>) =>
+        response.data,
+    }),
+    getCurrentUser: build.query<User, void>({
+      query: () => "users/me",
+      transformResponse: (response: UserResponse) => response.data,
+      providesTags: ["Users"],
+    }),
   }),
 });
 
@@ -96,4 +159,8 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useCreateGuestUserMutation,
+  useLoginMutation,
+  useRegisterMutation,
+  useGetCurrentUserQuery,
 } = usersApi;

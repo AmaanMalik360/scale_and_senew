@@ -17,8 +17,8 @@ export interface Category {
   name: string;
   slug: string;
   parent_id?: number | null;
-  children: Category[];
-  filterable_attributes: AttributeFilter[] | null;
+  children?: Category[];
+  filterable_attributes?: AttributeFilter[] | null;
 }
 
 export interface CategoryCreate {

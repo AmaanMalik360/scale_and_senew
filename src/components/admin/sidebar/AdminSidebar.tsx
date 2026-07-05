@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -25,6 +25,8 @@ import {
   ChevronRight,
   Layers,
 } from "lucide-react";
+import { useAppSelector, useAppDispatch } from "@/app/redux";
+import { logout } from "@/state/auth-slice";
 
 interface NavLeaf {
   label: string;
@@ -91,6 +93,14 @@ const navigation: NavSection[] = [
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.auth.user);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/admin/login");
+  };
 
   const hasActiveChild = (item: NavItem): boolean => {
     if (!item.children) return false;
@@ -117,6 +127,21 @@ export function AdminSidebar() {
     if (href === "/admin") return pathname === "/admin";
     if (href === "/admin/categories") return pathname.startsWith("/admin/categories") && !pathname.startsWith("/admin/categories/attributes");
     return pathname.startsWith(href);
+  };
+
+  const getUserInitials = () => {
+    if (user?.name) {
+      return user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    if (user?.email) {
+      return user.email[0].toUpperCase();
+    }
+    return "A";
   };
 
   return (
@@ -217,15 +242,21 @@ export function AdminSidebar() {
       <div className="mt-auto border-t border-[var(--admin-border-light)] p-3 space-y-2">
         <div className="flex items-center gap-3 px-3 py-2">
           <div className="w-8 h-8 rounded-full bg-[var(--admin-brand-secondary)] flex items-center justify-center text-white text-xs font-bold shrink-0">
-            A
+            {getUserInitials()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold truncate">Admin</p>
+            <p className="text-sm font-semibold truncate">
+              {user?.name || "Admin"}
+            </p>
             <p className="text-[11px] text-[var(--admin-grey)] truncate">
-              admin@store.com
+              {user?.email || "admin@store.com"}
             </p>
           </div>
-          <button className="text-[var(--admin-grey)] hover:text-[var(--admin-error)] transition-colors shrink-0">
+          <button
+            onClick={handleLogout}
+            className="text-[var(--admin-grey)] hover:text-[var(--admin-error)] transition-colors shrink-0"
+            aria-label="Logout"
+          >
             <LogOut className="w-4 h-4" />
           </button>
         </div>

@@ -75,7 +75,7 @@ export default function CategoriesPage() {
   const currentCategory = useMemo(() => {
     if (!slug || slug.length === 0) return undefined;
     return flatCategories.find(c => c.slug === currentSlug);
-  }, [slug, flatCategories]);
+  }, [slug, flatCategories, currentSlug]);
 
   // Build breadcrumb path
   const categoryPath = useCategoryPath(flatCategories, currentCategory);
@@ -318,8 +318,6 @@ export default function CategoriesPage() {
       </div>
     );
   }
-
-  console.log("editingCategory", editingCategory);
 
   return (
     <div className="space-y-6">

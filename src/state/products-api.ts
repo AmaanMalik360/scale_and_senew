@@ -1,5 +1,6 @@
 import { baseApi } from "./base-api";
 import { ApiResponse } from "./types";
+import { Category } from "./categories-api";
 
 export interface Product {
   id: string;
@@ -14,11 +15,7 @@ export interface Product {
 }
 
 export interface ProductWithCategory extends Product {
-  category?: {
-    id: number;
-    name: string;
-    description?: string;
-  };
+  category?: Category;
 }
 
 export interface ProductCreate {
@@ -27,7 +24,16 @@ export interface ProductCreate {
   category_id?: number;
   price: number;
   stock_quantity: number;
-  images?: string[];
+  images?: File[];
+}
+
+export interface ProductCreateFormData {
+  title: string;
+  description?: string;
+  category_id?: number;
+  price: number;
+  stock_quantity: number;
+  images?: File[];
 }
 
 export interface ProductUpdate {
@@ -88,18 +94,31 @@ export const productsApi = baseApi.injectEndpoints({
       providesTags: ["Products"],
     }),
     getProduct: build.query<ProductWithCategory, string>({
-      query: (productId) => `products/${productId}`,
+      query: (productId: string) => `products/${productId}`,
       transformResponse: (response: ProductWithCategoryResponse) => response.data,
       providesTags: (result, error, productId) => [
         { type: "Products", id: productId },
       ],
     }),
-    createProduct: build.mutation<Product, ProductCreate>({
-      query: (product) => ({
-        url: "products",
-        method: "POST",
-        body: product,
-      }),
+    createProduct: build.mutation<Product, ProductCreateFormData>({
+      query: (product) => {
+        const formData = new FormData();
+        formData.append("title", product.title);
+        if (product.description) formData.append("description", product.description);
+        if (product.category_id) formData.append("category_id", product.category_id.toString());
+        formData.append("price", product.price.toString());
+        formData.append("stock_quantity", product.stock_quantity.toString());
+        if (product.images) {
+          product.images.forEach((file) => {
+            formData.append("images", file);
+          });
+        }
+        return {
+          url: "products",
+          method: "POST",
+          body: formData,
+        };
+      },
       transformResponse: (response: ProductResponse) => response.data,
       invalidatesTags: ["Products"],
     }),
