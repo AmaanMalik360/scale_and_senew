@@ -26,7 +26,7 @@ import {
   Layers,
 } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "@/app/redux";
-import { logout } from "@/state/auth-slice";
+import useAuth from "@/hooks/useAuth";
 
 interface NavLeaf {
   label: string;
@@ -95,10 +95,12 @@ export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { logout: logoutFn, isLoggingOut } = useAuth();
+  
   const user = useAppSelector(state => state.auth.user);
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    await logoutFn();
     router.push("/admin/login");
   };
 

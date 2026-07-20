@@ -1,6 +1,7 @@
 import { Lato } from "next/font/google";
 import "../admin.css";
 import StoreProvider from "../../redux";
+import { AdminRedirectGuard } from "@/components/auth/AdminRedirectGuard";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -19,7 +20,9 @@ export default function AdminAuthLayout({
 }) {
   return (
     <div className={`admin-panel ${lato.className} min-h-screen`}>
-      <StoreProvider>{children}</StoreProvider>
+      <StoreProvider>
+        <AdminRedirectGuard>{children}</AdminRedirectGuard>
+      </StoreProvider>
     </div>
   );
 }

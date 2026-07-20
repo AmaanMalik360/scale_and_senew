@@ -28,7 +28,7 @@ export const useAuth = () => {
   const [loginMutation, { isLoading: isLoggingIn }] = useLoginMutation();
   const [registerMutation, { isLoading: isRegistering }] =
     useRegisterMutation();
-  const [logoutMutation] = useLogoutUserMutation();
+  const [logoutMutation, { isLoading: isLoggingOut }] = useLogoutUserMutation();
 
   const createGuestUser = useCallback(async () => {
     try {
@@ -58,6 +58,7 @@ export const useAuth = () => {
           is_guest: result.user.is_guest,
           created_at: result.user.created_at,
           updated_at: result.user.updated_at,
+          permissions: result.user.permissions,
         };
         dispatch(setCredentials({ user: authUser }));
         return result;
@@ -80,6 +81,7 @@ export const useAuth = () => {
           is_guest: result.user.is_guest,
           created_at: result.user.created_at,
           updated_at: result.user.updated_at,
+          permissions: result.user.permissions,
         };
         dispatch(setCredentials({ user: authUser }));
         return result;
@@ -112,10 +114,11 @@ export const useAuth = () => {
     user,
     isAuthenticated,
     isGuest,
-    isLoading: isCreatingGuest || isLoggingIn || isRegistering,
+    isLoading: isCreatingGuest || isLoggingIn || isRegistering || isLoggingOut,
     isCreatingGuest,
     isLoggingIn,
     isRegistering,
+    isLoggingOut,
     createGuestUser,
     login,
     register,

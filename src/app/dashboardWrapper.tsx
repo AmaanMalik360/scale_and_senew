@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import StoreProvider, { useAppSelector } from "./redux";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import { AdminRedirectGuard } from "@/components/auth/AdminRedirectGuard";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
@@ -20,7 +21,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      {children}
+      <AdminRedirectGuard>{children}</AdminRedirectGuard>
       <Footer />
     </div>
   );

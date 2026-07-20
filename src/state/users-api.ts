@@ -8,6 +8,7 @@ export interface User {
   is_guest: boolean;
   created_at: string;
   updated_at: string;
+  permissions?: string[];
 }
 
 export interface GuestUser {
