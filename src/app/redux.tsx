@@ -10,6 +10,7 @@ import {
 } from "react-redux";
 import globalReducer from "@/state";
 import authReducer from "@/state/auth-slice";
+import cartReducer from "@/state/cart-slice";
 import { baseApi } from "@/state/base-api";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
@@ -49,11 +50,12 @@ const storage =
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["global", "auth"],
+  whitelist: ["global", "auth", "cart"],
 };
 const rootReducer = combineReducers({
   global: globalReducer,
   auth: authReducer,
+  cart: cartReducer,
   [baseApi.reducerPath]: baseApi.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
