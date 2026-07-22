@@ -5,14 +5,6 @@ import ProductImageGallery from "../../../../components/product/ProductImageGall
 import ProductInfo from "../../../../components/product/ProductInfo";
 import ProductDescription from "../../../../components/product/ProductDescription";
 import ProductCarousel from "../../../../components/content/ProductCarousel";
-import { 
-  Breadcrumb, 
-  BreadcrumbItem, 
-  BreadcrumbLink, 
-  BreadcrumbList, 
-  BreadcrumbPage, 
-  BreadcrumbSeparator 
-} from "../../../../components/ui/breadcrumb";
 import { useCategoryPath } from "../../category/[...slug]/hooks";
 import { useChildCategories } from "../../category/[...slug]/hooks";
 import { useFlatCategories } from "../../category/[...slug]/hooks";
@@ -41,8 +33,8 @@ export default function ProductDetailPage() {
   const categoryPath = useCategoryPath(flatCategories, product?.category); // categories/wallets/bi-fold
   const childCategories = useChildCategories(product?.category); 
 
-  console.log("categoryPath", categoryPath);
-  console.log("childCategories", childCategories);
+  // console.log("categoryPath", categoryPath);
+  // console.log("childCategories", childCategories);
 
   return (
     <main className="pt-6">
@@ -66,7 +58,7 @@ export default function ProductDetailPage() {
               categoryPath={categoryPath}
               availableChildren={childCategories}
             />
-            <ProductDescription />
+            {product && <ProductDescription product={product} />}
           </div>
         </div>
       </section>

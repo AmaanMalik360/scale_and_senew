@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "../ui/button";
 import ReviewProduct from "./ReviewProduct";
+import { ProductWithCategory } from "@/state/products-api";
 
 const CustomStar = ({ filled, className }: { filled: boolean; className?: string }) => (
   <svg 
@@ -20,7 +21,11 @@ const CustomStar = ({ filled, className }: { filled: boolean; className?: string
   </svg>
 );
 
-const ProductDescription = () => {
+interface ProductDescriptionProps {
+  product: ProductWithCategory;
+}
+
+const ProductDescription = ({ product }: ProductDescriptionProps) => {
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isCareOpen, setIsCareOpen] = useState(false);
@@ -45,15 +50,11 @@ const ProductDescription = () => {
         {isDescriptionOpen && (
           <div className="pb-6 space-y-4">
             <p className="text-sm font-light text-muted-foreground leading-relaxed">
-              The Pantheon earrings embody architectural elegance with their clean, geometric design. 
-              Inspired by classical Roman architecture, these statement pieces feature a sophisticated 
-              interplay of curves and angles that catch and reflect light beautifully.
+              {product?.description || "The Pantheon earrings embody architectural elegance with their clean, geometric design. Inspired by classical Roman architecture, these statement pieces feature a sophisticated interplay of curves and angles that catch and reflect light beautifully."}
             </p>
-            <p className="text-sm font-light text-muted-foreground leading-relaxed">
-              Each earring is meticulously crafted from premium sterling silver with an 18k gold 
-              plating, ensuring both durability and luxury. The minimalist aesthetic makes them 
-              perfect for both everyday wear and special occasions.
-            </p>
+            {/* <p className="text-sm font-light text-muted-foreground leading-relaxed">
+              {product?.description || "Each earring is meticulously crafted from premium sterling silver with an 18k gold plating, ensuring both durability and luxury. The minimalist aesthetic makes them perfect for both everyday wear and special occasions."}
+            </p> */}
           </div>
         )}
       </div>
@@ -95,7 +96,7 @@ const ProductDescription = () => {
       </div>
 
       {/* Care Instructions */}
-      <div className="border-b border-border">
+      {/* <div className="border-b border-border">
         <Button
           variant="ghost"
           onClick={() => setIsCareOpen(!isCareOpen)}
@@ -121,7 +122,7 @@ const ProductDescription = () => {
             </p>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Customer Reviews */}
       <div className="border-b border-border lg:mb-16">
