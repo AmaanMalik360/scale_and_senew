@@ -26,7 +26,7 @@ const ProductImageGallery = ({ images }: ProductImageGalleryProps) => {
   const resolvedImages =
     images && images.length > 0
       ? images.map((img) => getImageUrl(img))
-      : PLACEHOLDER_IMAGES;
+      : [];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isZoomOpen, setIsZoomOpen] = useState(false);

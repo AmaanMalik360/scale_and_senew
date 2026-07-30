@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +9,7 @@ import * as Label from "@radix-ui/react-label";
 import { Save } from "lucide-react";
 import { useGetCategoriesQuery } from "@/state/categories-api";
 import { useCreateProductMutation } from "@/state/products-api";
+import { useGetCategoryAttributesQuery } from "@/state/attributes-api";
 import { CategorySelectDropdown } from "@/components/admin/dropdown/CategorySelectDropdown";
 import {
   ProductImageUpload,
@@ -20,6 +21,7 @@ const productSchema = z.object({
   description: z.string().optional(),
   price: z.number().min(0, "Price must be a positive number"),
   stock_quantity: z.number().min(0, "Stock quantity must be a positive number"),
+  sku: z.string().optional(),
   category_id: z.number().nullable(),
 });
 
@@ -29,6 +31,7 @@ export default function AddProductPage() {
   const router = useRouter();
   const [images, setImages] = useState<ImageItem[]>([]);
   const [priceDisplay, setPriceDisplay] = useState("");
+  const [selectedAttributeValues, setSelectedAttributeValues] = useState<Record<string, number>>({});
 
   const { data: categories = [] } = useGetCategoriesQuery({ slug: "fashion" });
   const [createProduct, { isLoading }] = useCreateProductMutation();
@@ -47,9 +50,21 @@ export default function AddProductPage() {
       description: "",
       price: 0,
       stock_quantity: 0,
+      sku: "",
       category_id: null,
     },
   });
+
+  const categoryId = watch("category_id");
+  const { data: categoryAttributesData } = useGetCategoryAttributesQuery(
+    categoryId ?? 0,
+    { skip: !categoryId }
+  );
+  const categoryAttributes = categoryAttributesData?.attributes ?? [];
+
+  useEffect(() => {
+    setSelectedAttributeValues({});
+  }, [categoryId]);
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9.]/g, "");
@@ -58,14 +73,29 @@ export default function AddProductPage() {
     setValue("price", cents);
   };
 
+  const handleAttributeChange = (attributeName: string, valueId: number | undefined) => {
+    setSelectedAttributeValues((prev) => {
+      const next = { ...prev };
+      if (valueId !== undefined) {
+        next[attributeName] = valueId;
+      } else {
+        delete next[attributeName];
+      }
+      return next;
+    });
+  };
+
   const handleSubmitForm = async (data: ProductFormData) => {
     try {
+      const attributeValueIds = Object.values(selectedAttributeValues);
       await createProduct({
         title: data.title,
         description: data.description || undefined,
         category_id: data.category_id || undefined,
         price: data.price,
         stock_quantity: data.stock_quantity,
+        sku: data.sku || undefined,
+        attribute_value_ids: attributeValueIds.length > 0 ? attributeValueIds : undefined,
         images: images.map((img) => img.file),
       }).unwrap();
 
@@ -243,6 +273,23 @@ export default function AddProductPage() {
                 </div>
               </div>
             </div>
+
+            {/* SKU */}
+            <div className="space-y-2">
+              <Label.Root
+                htmlFor="sku"
+                className="text-body-sm font-medium text-[var(--admin-text-primary)]"
+              >
+                SKU
+              </Label.Root>
+              <input
+                id="sku"
+                type="text"
+                {...register("sku")}
+                className="admin-input w-full"
+                placeholder="e.g. WLT-BLK-001"
+              />
+            </div>
           </div>
         </div>
 
@@ -275,6 +322,40 @@ export default function AddProductPage() {
               noneOptionText="No Category"
             />
           </div>
+
+          {/* Product Attributes Card */}
+          {categoryAttributes.length > 0 && (
+            <div className="admin-card p-6 space-y-5">
+              <h2 className="text-body font-semibold text-[var(--admin-brand-secondary)]">
+                Product Attributes
+              </h2>
+              {categoryAttributes.map((attr) => (
+                <div key={attr.name} className="space-y-2">
+                  <Label.Root className="text-body-sm font-medium text-[var(--admin-text-primary)]">
+                    {attr.name}
+                  </Label.Root>
+                  <select
+                    className="admin-input w-full"
+                    value={selectedAttributeValues[attr.name] ?? ""}
+                    onChange={(e) =>
+                      handleAttributeChange(
+                        attr.name,
+                        e.target.value ? Number(e.target.value) : undefined
+                      )
+                    }
+                    aria-label={`Select ${attr.name}`}
+                  >
+                    <option value="">Select {attr.name}</option>
+                    {attr.values.map((v) => (
+                      <option key={v.id} value={v.id}>
+                        {v.value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </form>
     </div>

@@ -114,18 +114,21 @@ const ProductInfo = ({
         </div>
       </div>
 
-      {/* Old Product details */}
-      {/* <div className="space-y-4 py-4 border-b border-border">
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Material</h3>
-          <p className="text-sm font-light text-muted-foreground">18k Gold Plated Sterling Silver</p>
-        </div>
-        
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Dimensions</h3>
-          <p className="text-sm font-light text-muted-foreground">2.5cm x 1.2cm</p>
-        </div>
-        
+      {/* Product Attributes */}
+      {product?.attribute_values && product.attribute_values.length > 0 && (
+        <div className="space-y-4 py-4 border-border">
+          {product.attribute_values.map((av) => (
+            <div key={av.attribute_value.id} className="space-y-1">
+              <h3 className="text-sm font-light text-foreground">
+                {av.attribute_value.attribute.name}
+              </h3>
+              <p className="text-sm font-light text-muted-foreground">
+                {av.attribute_value.value}
+              </p>
+            </div>
+          ))}
+
+          {/* 
         <div className="space-y-2">
           <h3 className="text-sm font-light text-foreground">Weight</h3>
           <p className="text-sm font-light text-muted-foreground">4.2g per earring</p>
@@ -134,26 +137,24 @@ const ProductInfo = ({
         <div className="space-y-2">
           <h3 className="text-sm font-light text-foreground">Editor's notes</h3>
           <p className="text-sm font-light text-muted-foreground italic">"A modern interpretation of classical architecture, these earrings bridge timeless elegance with contemporary minimalism."</p>
-        </div>
-      </div> */}
+        </div> */}
 
-      {/* Stock status */}
-      {product && (
-        <p
-          className={`text-sm font-light ${
-            product.stock_quantity > 0
-              ? "text-muted-foreground"
-              : "text-destructive"
-          }`}
-        >
-          {product.stock_quantity > 0
-            ? `${product.stock_quantity} in stock`
-            : "Out of stock"}
-        </p>
+          {/* Stock status */}
+
+          {product?.stock_quantity &&
+            <div className="space-y-2 ">
+              <h3 className="text-sm font-light text-foreground">In Stock</h3>
+              <p className="text-sm font-light text-muted-foreground">{product.stock_quantity ? `${product.stock_quantity} available` : "Out of stock"}</p>
+            </div>
+          }
+        </div>
       )}
 
+
+      <div className="border-t"></div>
+
       {/* Quantity and Add to Cart */}
-      <div className="space-y-4 pt-2 border-t border-border">
+      <div className="space-y-4 pt-2  border-border">
         <div className="flex items-center gap-4">
           <span className="text-sm font-light text-foreground">Quantity</span>
           <div className="flex items-center border border-border">

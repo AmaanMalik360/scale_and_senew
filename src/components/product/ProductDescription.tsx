@@ -77,20 +77,18 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
           <div className="pb-6 space-y-3">
             <div className="flex justify-between">
               <span className="text-sm font-light text-muted-foreground">SKU</span>
-              <span className="text-sm font-light text-foreground">LE-PTH-001</span>
+              <span className="text-sm font-light text-foreground">{product?.sku ?? "—"}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm font-light text-muted-foreground">Collection</span>
-              <span className="text-sm font-light text-foreground">Architectural Series</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm font-light text-muted-foreground">Closure</span>
-              <span className="text-sm font-light text-foreground">Post and butterfly back</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm font-light text-muted-foreground">Hypoallergenic</span>
-              <span className="text-sm font-light text-foreground">Yes</span>
-            </div>
+            {product?.attribute_values?.map((av) => (
+              <div key={av.attribute_value.id} className="flex justify-between">
+                <span className="text-sm font-light text-muted-foreground">
+                  {av.attribute_value.attribute.name}
+                </span>
+                <span className="text-sm font-light text-foreground">
+                  {av.attribute_value.value}
+                </span>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -125,7 +123,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
       </div> */}
 
       {/* Customer Reviews */}
-      <div className="border-b border-border lg:mb-16">
+      {/* <div className="border-b border-border lg:mb-16">
         <Button
           variant="ghost"
           onClick={() => setIsReviewsOpen(!isReviewsOpen)}
@@ -151,10 +149,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
         </Button>
         {isReviewsOpen && (
           <div className="pb-6 space-y-6">
-            {/* Review Product Button */}
             <ReviewProduct />
-
-            {/* Reviews List */}
             <div className="space-y-6">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -212,7 +207,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

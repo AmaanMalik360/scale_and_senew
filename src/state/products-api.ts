@@ -2,6 +2,17 @@ import { baseApi } from "./base-api";
 import { ApiResponse } from "./types";
 import { Category } from "./categories-api";
 
+export interface ProductAttributeValueItem {
+  attribute_value: {
+    id: number;
+    value: string;
+    attribute: {
+      id: number;
+      name: string;
+    };
+  };
+}
+
 export interface Product {
   id: string;
   title: string;
@@ -9,7 +20,9 @@ export interface Product {
   category_id?: number;
   price: number;
   stock_quantity: number;
+  sku?: string;
   images: string[];
+  attribute_values?: ProductAttributeValueItem[];
   created_at: string;
   updated_at: string;
 }
@@ -24,6 +37,7 @@ export interface ProductCreate {
   category_id?: number;
   price: number;
   stock_quantity: number;
+  sku?: string;
   images?: File[];
 }
 
@@ -33,6 +47,8 @@ export interface ProductCreateFormData {
   category_id?: number;
   price: number;
   stock_quantity: number;
+  sku?: string;
+  attribute_value_ids?: number[];
   images?: File[];
 }
 
@@ -42,6 +58,7 @@ export interface ProductUpdate {
   category_id?: number;
   price?: number;
   stock_quantity?: number;
+  sku?: string;
   images?: string[];
 }
 
@@ -108,6 +125,12 @@ export const productsApi = baseApi.injectEndpoints({
         if (product.category_id) formData.append("category_id", product.category_id.toString());
         formData.append("price", product.price.toString());
         formData.append("stock_quantity", product.stock_quantity.toString());
+        if (product.sku) formData.append("sku", product.sku);
+        if (product.attribute_value_ids) {
+          product.attribute_value_ids.forEach((id) => {
+            formData.append("attribute_value_ids", id.toString());
+          });
+        }
         if (product.images) {
           product.images.forEach((file) => {
             formData.append("images", file);
