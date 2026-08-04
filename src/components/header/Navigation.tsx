@@ -1,31 +1,41 @@
 
 "use client";
-import { ArrowRight, X, User, LogOut
-  // , Minus, Plus 
-} from "lucide-react";
+import { ArrowRight, X, User, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAppSelector } from "@/app/redux";
 import { useAuth } from "@/hooks/useAuth";
-import { StaticImageData } from "next/image";
-// import { Badge } from "./components/ui/badge";
-// import { Button } from "./components/ui/button";
 import ShoppingBag from "./ShoppingBag";
-import pantheonImage from "@/assets/pantheon.jpg";
-import eclipseImage from "@/assets/eclipse.jpg";
-import haloImage from "@/assets/halo.jpg";
 import WalletImage from "@/assets/scale_senew/Crocodile Scale Leather Brown Wallet.jpeg";
 import LadiesBag from "@/assets/scale_senew/Snake Leather White Ladies Bag.jpeg";
 import { useGetCategoriesQuery } from "@/state/categories-api";
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: string;
-  image: StaticImageData;
-  quantity: number;
-  category: string;
-}
+// [
+//     {
+//       id: 1,
+//       name: "Pantheon",
+//       price: "€2,850",
+//       image: pantheonImage,
+//       quantity: 1,
+//       category: "Earrings"
+//     },
+//     {
+//       id: 2,
+//       name: "Eclipse",
+//       price: "€3,200", 
+//       image: eclipseImage,
+//       quantity: 1,
+//       category: "Bracelets"
+//     },
+//     {
+//       id: 3,
+//       name: "Halo",
+//       price: "€1,950",
+//       image: haloImage, 
+//       quantity: 1,
+//       category: "Earrings"
+//     }
+//   ]
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -37,51 +47,13 @@ const Navigation = () => {
   // Auth state
   const { isAuthenticated, isGuest, user } = useAppSelector((state) => state.auth);
   const { logout } = useAuth();
+
+  // Cart badge count from Redux
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   
   // Fetch categories from API
   const { data: categories, isLoading, error } = useGetCategoriesQuery({slug: 'fashion'});
-  
-  // Shopping bag state with 3 mock items
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Pantheon",
-      price: "€2,850",
-      image: pantheonImage,
-      quantity: 1,
-      category: "Earrings"
-    },
-    {
-      id: 2,
-      name: "Eclipse",
-      price: "€3,200", 
-      image: eclipseImage,
-      quantity: 1,
-      category: "Bracelets"
-    },
-    {
-      id: 3,
-      name: "Halo",
-      price: "€1,950",
-      image: haloImage, 
-      quantity: 1,
-      category: "Earrings"
-    }
-  ]);
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      setCartItems(items => items.filter(item => item.id !== id));
-    } else {
-      setCartItems(items => 
-        items.map(item => 
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
-    }
-  };
   
   // Preload dropdown images for faster display
   useEffect(() => {
@@ -425,11 +397,9 @@ const Navigation = () => {
       )}
       
       {/* Shopping Bag Component */}
-      <ShoppingBag 
+      <ShoppingBag
         isOpen={isShoppingBagOpen}
         onClose={() => setIsShoppingBagOpen(false)}
-        cartItems={cartItems}
-        updateQuantity={updateQuantity}
         onViewFavorites={() => {
           setIsShoppingBagOpen(false);
           setOffCanvasType('favorites');

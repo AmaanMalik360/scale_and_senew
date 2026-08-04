@@ -5,10 +5,13 @@ import StoreProvider, { useAppSelector } from "./redux";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { AdminRedirectGuard } from "@/components/auth/AdminRedirectGuard";
+import { useCartSync } from "@/hooks/useCartSync";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+
+  useCartSync();
 
   useEffect(() => {
     if (isDarkMode) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Minus, Plus } from "lucide-react";
 import CategoryHeader from "../category/CategoryHeader";
@@ -10,7 +10,10 @@ import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { addToCart } from "@/state/cart-slice";
 import { setGuestUser } from "@/state/auth-slice";
 import { useCreateGuestUserMutation } from "@/state/users-api";
+import { useAddCartItemMutation } from "@/state/cart-api";
 import { getImageUrl } from "@/lib/utils";
+import { toast } from "@/hooks/use-toast";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface ProductInfoProps {
   product?: ProductWithCategory;
@@ -33,10 +36,12 @@ const ProductInfo = ({
 }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+  const [addToBagTrigger, setAddToBagTrigger] = useState(0);
 
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [createGuestUser] = useCreateGuestUserMutation();
+  const [addCartItem] = useAddCartItemMutation();
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
@@ -47,17 +52,25 @@ const ProductInfo = ({
     setIsAdding(true);
     try {
       if (!isAuthenticated) {
-        const guestData = await createGuestUser().unwrap();
-        dispatch(
-          setGuestUser({
-            user: {
-              id: guestData.user.id,
-              is_guest: guestData.user.is_guest,
-              created_at: guestData.user.created_at,
-              guest_expires_at: guestData.user.guest_expires_at ?? null,
-            },
-          })
-        );
+        try {
+          const guestData = await createGuestUser().unwrap();
+          dispatch(
+            setGuestUser({
+              user: {
+                id: guestData.user.id,
+                is_guest: guestData.user.is_guest,
+                created_at: guestData.user.created_at,
+                guest_expires_at: guestData.user.guest_expires_at ?? null,
+              },
+            })
+          );
+        } catch {
+          toast({
+            title: "Could not initialise session. Please try again.",
+            variant: "error",
+          });
+          return;
+        }
       }
 
       dispatch(
@@ -70,10 +83,30 @@ const ProductInfo = ({
           quantity,
         })
       );
+
+      addCartItem({ productId: product.id, quantity }).catch(() => {
+        toast({
+          title: "Item added locally. Sync will retry on next visit.",
+          variant: "default",
+        });
+      });
     } finally {
       setIsAdding(false);
     }
   };
+
+  // Debounce rapid "Add to Bag" clicks so we don't fire duplicate add/sync requests.
+  const debouncedAddToBagTrigger = useDebounce(addToBagTrigger, 400);
+  const isFirstAddToBagRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstAddToBagRender.current) {
+      isFirstAddToBagRender.current = false;
+      return;
+    }
+    handleAddToBag();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedAddToBagTrigger]);
 
   return (
     <div className="space-y-6">
@@ -115,20 +148,23 @@ const ProductInfo = ({
       </div>
 
       {/* Product Attributes */}
-      {product?.attribute_values && product.attribute_values.length > 0 && (
+      {product?.attributes && product.attributes.filter((a) =>
+        ['material', 'accents', 'weight'].includes(a.name.toLowerCase())
+      ).length > 0 && (
         <div className="space-y-4 py-4 border-border">
-          {product.attribute_values.map((av) => (
-            <div key={av.attribute_value.id} className="space-y-1">
-              <h3 className="text-sm font-light text-foreground">
-                {av.attribute_value.attribute.name}
-              </h3>
-              <p className="text-sm font-light text-muted-foreground">
-                {av.attribute_value.value}
-              </p>
-            </div>
-          ))}
-
-          {/* 
+          {product.attributes
+            .filter((a) => ['material', 'accents', 'weight'].includes(a.name.toLowerCase()))
+            .map((attr) => (
+              <div key={attr.value_id} className="space-y-1">
+                <h3 className="text-sm font-light text-foreground">
+                  {attr.name}
+                </h3>
+                <p className="text-sm font-light text-muted-foreground">
+                  {attr.value}
+                </p>
+              </div>
+            ))}
+        {/* 
         <div className="space-y-2">
           <h3 className="text-sm font-light text-foreground">Weight</h3>
           <p className="text-sm font-light text-muted-foreground">4.2g per earring</p>
@@ -136,19 +172,19 @@ const ProductInfo = ({
         
         <div className="space-y-2">
           <h3 className="text-sm font-light text-foreground">Editor's notes</h3>
-          <p className="text-sm font-light text-muted-foreground italic">"A modern interpretation of classical architecture, these earrings bridge timeless elegance with contemporary minimalism."</p>
+          <p className="text-sm font-light text-muted-foreground italic">"A modern interpretation of classical architecture, these 
+earrings bridge timeless elegance with contemporary minimalism."</p>
         </div> */}
-
-          {/* Stock status */}
-
-          {product?.stock_quantity &&
-            <div className="space-y-2 ">
-              <h3 className="text-sm font-light text-foreground">In Stock</h3>
-              <p className="text-sm font-light text-muted-foreground">{product.stock_quantity ? `${product.stock_quantity} available` : "Out of stock"}</p>
-            </div>
-          }
         </div>
       )}
+      {/* Stock status */}
+
+      {product?.stock_quantity &&
+        <div className="space-y-2 ">
+          <h3 className="text-sm font-light text-foreground">In Stock</h3>
+          <p className="text-sm font-light text-muted-foreground">{product.stock_quantity > 0? `${product.stock_quantity} available` : "Out of stock"}</p>
+        </div>
+      }
 
 
       <div className="border-t"></div>
@@ -184,8 +220,8 @@ const ProductInfo = ({
 
         <Button
           className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none"
-          onClick={handleAddToBag}
-          disabled={isAdding || !product || product.stock_quantity === 0}
+          onClick={() => setAddToBagTrigger((prev) => prev + 1)}
+          disabled={isAdding || !product || product.stock_quantity <= 0}
         >
           {isAdding ? "Adding..." : "Add to Bag"}
         </Button>

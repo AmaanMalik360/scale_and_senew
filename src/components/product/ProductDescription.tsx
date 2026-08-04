@@ -79,13 +79,13 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
               <span className="text-sm font-light text-muted-foreground">SKU</span>
               <span className="text-sm font-light text-foreground">{product?.sku ?? "—"}</span>
             </div>
-            {product?.attribute_values?.map((av) => (
-              <div key={av.attribute_value.id} className="flex justify-between">
+            {product?.attributes?.map((attr) => (
+              <div key={attr.value_id} className="flex justify-between">
                 <span className="text-sm font-light text-muted-foreground">
-                  {av.attribute_value.attribute.name}
+                  {attr.name}
                 </span>
                 <span className="text-sm font-light text-foreground">
-                  {av.attribute_value.value}
+                  {attr.value}
                 </span>
               </div>
             ))}

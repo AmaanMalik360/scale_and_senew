@@ -2,15 +2,11 @@ import { baseApi } from "./base-api";
 import { ApiResponse } from "./types";
 import { Category } from "./categories-api";
 
-export interface ProductAttributeValueItem {
-  attribute_value: {
-    id: number;
-    value: string;
-    attribute: {
-      id: number;
-      name: string;
-    };
-  };
+export interface ProductAttribute {
+  value_id: number;
+  attribute_id: number;
+  name: string;
+  value: string;
 }
 
 export interface Product {
@@ -22,7 +18,7 @@ export interface Product {
   stock_quantity: number;
   sku?: string;
   images: string[];
-  attribute_values?: ProductAttributeValueItem[];
+  attributes?: ProductAttribute[];
   created_at: string;
   updated_at: string;
 }

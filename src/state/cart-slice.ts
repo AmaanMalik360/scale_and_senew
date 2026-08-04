@@ -56,9 +56,30 @@ export const cartSlice = createSlice({
     clearCart: (state) => {
       state.items = [];
     },
+    setCart: (state, action: PayloadAction<CartItem[]>) => {
+      state.items = action.payload;
+    },
+    hydrateCart: (state, action: PayloadAction<CartItem[]>) => {
+      action.payload.forEach((backendItem) => {
+        const existing = state.items.find(
+          (i) => i.productId === backendItem.productId
+        );
+        if (existing) {
+          existing.quantity = Math.max(existing.quantity, backendItem.quantity);
+        } else {
+          state.items.push(backendItem);
+        }
+      });
+    },
   },
 });
 
-export const { addToCart, removeFromCart, updateCartItemQuantity, clearCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  updateCartItemQuantity,
+  clearCart,
+  setCart,
+  hydrateCart,
+} = cartSlice.actions;
 export default cartSlice.reducer;
