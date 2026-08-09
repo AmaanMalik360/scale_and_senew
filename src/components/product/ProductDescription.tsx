@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "../ui/button";
 import ReviewProduct from "./ReviewProduct";
 import { ProductWithCategory } from "@/state/products-api";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 const CustomStar = ({ filled, className }: { filled: boolean; className?: string }) => (
   <svg 
@@ -82,7 +83,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
             {product?.attributes?.map((attr) => (
               <div key={attr.value_id} className="flex justify-between">
                 <span className="text-sm font-light text-muted-foreground">
-                  {attr.name}
+                  {capitalizeFirstLetter(attr.name)}
                 </span>
                 <span className="text-sm font-light text-foreground">
                   {attr.value}

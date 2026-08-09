@@ -5,12 +5,20 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import * as Label from "@radix-ui/react-label";
 import { Save } from "lucide-react";
 import { useGetCategoriesQuery } from "@/state/categories-api";
 import { useCreateProductMutation } from "@/state/products-api";
 import { useGetCategoryAttributesQuery } from "@/state/attributes-api";
-import { CategorySelectDropdown } from "@/components/admin/dropdown/CategorySelectDropdown";
+import {
+  Form,
+  TextField,
+  TextAreaField,
+  NumberField,
+  CurrencyField,
+  CategoryTreeSelectField,
+  DynamicFieldGroup,
+  DynamicFieldDescriptor,
+} from "@/components/form";
 import {
   ProductImageUpload,
   ImageItem,
@@ -23,6 +31,7 @@ const productSchema = z.object({
   stock_quantity: z.number().min(0, "Stock quantity must be a positive number"),
   sku: z.string().optional(),
   category_id: z.number().nullable(),
+  attribute_values: z.record(z.string(), z.number()),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -30,20 +39,11 @@ type ProductFormData = z.infer<typeof productSchema>;
 export default function AddProductPage() {
   const router = useRouter();
   const [images, setImages] = useState<ImageItem[]>([]);
-  const [priceDisplay, setPriceDisplay] = useState("");
-  const [selectedAttributeValues, setSelectedAttributeValues] = useState<Record<string, number>>({});
 
   const { data: categories = [] } = useGetCategoriesQuery({ slug: "fashion" });
   const [createProduct, { isLoading }] = useCreateProductMutation();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<ProductFormData>({
+  const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       title: "",
@@ -52,42 +52,35 @@ export default function AddProductPage() {
       stock_quantity: 0,
       sku: "",
       category_id: null,
+      attribute_values: {},
     },
   });
 
-  const categoryId = watch("category_id");
+  const categoryId = form.watch("category_id");
+  const stockQuantity = form.watch("stock_quantity");
+
   const { data: categoryAttributesData } = useGetCategoryAttributesQuery(
     categoryId ?? 0,
     { skip: !categoryId }
   );
   const categoryAttributes = categoryAttributesData?.attributes ?? [];
 
+  // Reset attribute selections whenever the category changes
   useEffect(() => {
-    setSelectedAttributeValues({});
-  }, [categoryId]);
+    form.setValue("attribute_values", {});
+  }, [categoryId, form]);
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9.]/g, "");
-    setPriceDisplay(value);
-    const cents = Math.round(parseFloat(value || "0") * 100);
-    setValue("price", cents);
-  };
-
-  const handleAttributeChange = (attributeName: string, valueId: number | undefined) => {
-    setSelectedAttributeValues((prev) => {
-      const next = { ...prev };
-      if (valueId !== undefined) {
-        next[attributeName] = valueId;
-      } else {
-        delete next[attributeName];
-      }
-      return next;
-    });
-  };
+  const attributeDescriptors: DynamicFieldDescriptor[] = categoryAttributes.map(
+    (attr) => ({
+      key: attr.name,
+      label: attr.name,
+      options: attr.values.map((v) => ({ value: v.id, label: v.value })),
+    })
+  );
 
   const handleSubmitForm = async (data: ProductFormData) => {
     try {
-      const attributeValueIds = Object.values(selectedAttributeValues);
+      const attributeValueIds = Object.values(data.attribute_values);
       await createProduct({
         title: data.title,
         description: data.description || undefined,
@@ -98,7 +91,6 @@ export default function AddProductPage() {
         attribute_value_ids: attributeValueIds.length > 0 ? attributeValueIds : undefined,
         images: images.map((img) => img.file),
       }).unwrap();
-
       router.push("/admin/categories");
     } catch (error) {
       console.error("Failed to create product:", error);
@@ -120,7 +112,7 @@ export default function AddProductPage() {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => handleSubmit(handleSubmitForm)()}
+            onClick={form.handleSubmit(handleSubmitForm)}
             disabled={isLoading}
             className="admin-btn-primary"
           >
@@ -137,8 +129,9 @@ export default function AddProductPage() {
         </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit(handleSubmitForm)}
+      <Form
+        form={form}
+        onSubmit={handleSubmitForm}
         className="grid grid-cols-1 lg:grid-cols-3 gap-6"
       >
         {/* Left Column - Basic Details, Pricing, Inventory */}
@@ -148,46 +141,17 @@ export default function AddProductPage() {
             <h2 className="text-body font-semibold text-[var(--admin-brand-secondary)]">
               Basic Details
             </h2>
-
-            {/* Product Name */}
-            <div className="space-y-2">
-              <Label.Root
-                htmlFor="title"
-                className="text-body-sm font-medium text-[var(--admin-text-primary)]"
-              >
-                Product Name
-              </Label.Root>
-              <input
-                id="title"
-                type="text"
-                {...register("title")}
-                className="admin-input w-full"
-                placeholder="Enter product name"
-                aria-invalid={errors.title ? "true" : "false"}
-              />
-              {errors.title && (
-                <p className="text-body-sm text-[var(--admin-error)]" role="alert">
-                  {errors.title.message}
-                </p>
-              )}
-            </div>
-
-            {/* Product Description */}
-            <div className="space-y-2">
-              <Label.Root
-                htmlFor="description"
-                className="text-body-sm font-medium text-[var(--admin-text-primary)]"
-              >
-                Product Description
-              </Label.Root>
-              <textarea
-                id="description"
-                {...register("description")}
-                className="admin-input w-full min-h-[120px] resize-y"
-                placeholder="Enter product description"
-                rows={4}
-              />
-            </div>
+            <TextField<ProductFormData>
+              name="title"
+              label="Product Name"
+              placeholder="Enter product name"
+              required
+            />
+            <TextAreaField<ProductFormData>
+              name="description"
+              label="Product Description"
+              placeholder="Enter product description"
+            />
           </div>
 
           {/* Pricing Card */}
@@ -195,35 +159,11 @@ export default function AddProductPage() {
             <h2 className="text-body font-semibold text-[var(--admin-brand-secondary)]">
               Pricing
             </h2>
-
-            {/* Product Price */}
-            <div className="space-y-2">
-              <Label.Root
-                htmlFor="price"
-                className="text-body-sm font-medium text-[var(--admin-text-primary)]"
-              >
-                Product Price
-              </Label.Root>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--admin-grey)]">
-                  €
-                </span>
-                <input
-                  id="price"
-                  type="text"
-                  value={priceDisplay}
-                  onChange={handlePriceChange}
-                  className="admin-input w-full pl-7"
-                  placeholder="0.00"
-                  aria-invalid={errors.price ? "true" : "false"}
-                />
-              </div>
-              {errors.price && (
-                <p className="text-body-sm text-[var(--admin-error)]" role="alert">
-                  {errors.price.message}
-                </p>
-              )}
-            </div>
+            <CurrencyField<ProductFormData>
+              name="price"
+              label="Product Price"
+              required
+            />
           </div>
 
           {/* Inventory Card */}
@@ -231,69 +171,38 @@ export default function AddProductPage() {
             <h2 className="text-body font-semibold text-[var(--admin-brand-secondary)]">
               Inventory
             </h2>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Stock Quantity */}
+              <NumberField<ProductFormData>
+                name="stock_quantity"
+                label="Stock Quantity"
+                min={0}
+                placeholder="0"
+              />
+              {/* Stock Status — derived display, not a form field */}
               <div className="space-y-2">
-                <Label.Root
-                  htmlFor="stock_quantity"
-                  className="text-body-sm font-medium text-[var(--admin-text-primary)]"
-                >
-                  Stock Quantity
-                </Label.Root>
-                <input
-                  id="stock_quantity"
-                  type="number"
-                  min="0"
-                  {...register("stock_quantity", { valueAsNumber: true })}
-                  className="admin-input w-full"
-                  placeholder="0"
-                  aria-invalid={errors.stock_quantity ? "true" : "false"}
-                />
-                {errors.stock_quantity && (
-                  <p className="text-body-sm text-[var(--admin-error)]" role="alert">
-                    {errors.stock_quantity.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Stock Status (derived from stock_quantity, read-only indicator) */}
-              <div className="space-y-2">
-                <Label.Root className="text-body-sm font-medium text-[var(--admin-text-primary)]">
+                <label className="text-body-sm font-medium text-[var(--admin-text-primary)]">
                   Stock Status
-                </Label.Root>
+                </label>
                 <div
                   className={`admin-input w-full flex items-center ${
-                    watch("stock_quantity") > 0
+                    stockQuantity > 0
                       ? "text-[var(--admin-success)]"
                       : "text-[var(--admin-error)]"
                   }`}
                 >
-                  {watch("stock_quantity") > 0 ? "In Stock" : "Out of Stock"}
+                  {stockQuantity > 0 ? "In Stock" : "Out of Stock"}
                 </div>
               </div>
             </div>
-
-            {/* SKU */}
-            <div className="space-y-2">
-              <Label.Root
-                htmlFor="sku"
-                className="text-body-sm font-medium text-[var(--admin-text-primary)]"
-              >
-                SKU
-              </Label.Root>
-              <input
-                id="sku"
-                type="text"
-                {...register("sku")}
-                className="admin-input w-full"
-                placeholder="e.g. WLT-BLK-001"
-              />
-            </div>
+            <TextField<ProductFormData>
+              name="sku"
+              label="SKU"
+              placeholder="e.g. WLT-BLK-001"
+            />
           </div>
         </div>
 
-        {/* Right Column - Image Upload, Categories */}
+        {/* Right Column - Image Upload, Categories, Attributes */}
         <div className="space-y-6">
           {/* Upload Product Image Card */}
           <div className="admin-card p-6">
@@ -312,10 +221,8 @@ export default function AddProductPage() {
             <h2 className="text-body font-semibold text-[var(--admin-brand-secondary)] mb-4">
               Categories
             </h2>
-            <CategorySelectDropdown
+            <CategoryTreeSelectField<ProductFormData>
               name="category_id"
-              control={control}
-              errors={errors}
               categories={categories}
               label="Product Categories"
               placeholder="Select your product category"
@@ -323,41 +230,20 @@ export default function AddProductPage() {
             />
           </div>
 
-          {/* Product Attributes Card */}
+          {/* Product Attributes Card — only shown when a category is selected */}
           {categoryAttributes.length > 0 && (
             <div className="admin-card p-6 space-y-5">
               <h2 className="text-body font-semibold text-[var(--admin-brand-secondary)]">
                 Product Attributes
               </h2>
-              {categoryAttributes.map((attr) => (
-                <div key={attr.name} className="space-y-2">
-                  <Label.Root className="text-body-sm font-medium text-[var(--admin-text-primary)]">
-                    {attr.name}
-                  </Label.Root>
-                  <select
-                    className="admin-input w-full"
-                    value={selectedAttributeValues[attr.name] ?? ""}
-                    onChange={(e) =>
-                      handleAttributeChange(
-                        attr.name,
-                        e.target.value ? Number(e.target.value) : undefined
-                      )
-                    }
-                    aria-label={`Select ${attr.name}`}
-                  >
-                    <option value="">Select {attr.name}</option>
-                    {attr.values.map((v) => (
-                      <option key={v.id} value={v.id}>
-                        {v.value}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ))}
+              <DynamicFieldGroup<ProductFormData>
+                name="attribute_values"
+                descriptors={attributeDescriptors}
+              />
             </div>
           )}
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

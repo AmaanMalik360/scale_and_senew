@@ -275,12 +275,17 @@ export default function CategoriesPage() {
       label: "Action",
       render: (_value, row) => (
         <div className="flex items-center gap-2">
-          <button className="text-[var(--admin-grey)] hover:text-[var(--admin-brand-primary)] transition-colors">
+          <button
+            onClick={() => router.push(`/admin/products/${row.id}/edit`)}
+            className="text-[var(--admin-grey)] hover:text-[var(--admin-brand-primary)] transition-colors"
+            aria-label={`Edit product ${row.title}`}
+          >
             <Pencil className="w-4 h-4" />
           </button>
           <button
             onClick={() => handleDeleteProduct(row.id)}
             className="text-[var(--admin-grey)] hover:text-[var(--admin-error)] transition-colors"
+            aria-label={`Delete product ${row.title}`}
           >
             <Trash2 className="w-4 h-4" />
           </button>

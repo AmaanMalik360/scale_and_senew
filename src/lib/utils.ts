@@ -9,3 +9,6 @@ export function getImageUrl(partialUrl: string) {
   return `${process.env.NEXT_PUBLIC_API_BASE}${partialUrl}`
 }
 
+export function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

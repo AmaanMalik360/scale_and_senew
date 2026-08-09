@@ -11,7 +11,7 @@ import { addToCart } from "@/state/cart-slice";
 import { setGuestUser } from "@/state/auth-slice";
 import { useCreateGuestUserMutation } from "@/state/users-api";
 import { useAddCartItemMutation } from "@/state/cart-api";
-import { getImageUrl } from "@/lib/utils";
+import { capitalizeFirstLetter, getImageUrl } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useDebounce } from "@/hooks/useDebounce";
 
@@ -157,7 +157,7 @@ const ProductInfo = ({
             .map((attr) => (
               <div key={attr.value_id} className="space-y-1">
                 <h3 className="text-sm font-light text-foreground">
-                  {attr.name}
+                  {capitalizeFirstLetter(attr.name)}
                 </h3>
                 <p className="text-sm font-light text-muted-foreground">
                   {attr.value}
