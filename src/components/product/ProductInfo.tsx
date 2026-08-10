@@ -11,6 +11,8 @@ import { addToCart } from "@/state/cart-slice";
 import { setGuestUser } from "@/state/auth-slice";
 import { useCreateGuestUserMutation } from "@/state/users-api";
 import { useAddCartItemMutation } from "@/state/cart-api";
+import { useCreateOrderMutation } from "@/state/orders-api";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { capitalizeFirstLetter, getImageUrl } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -36,12 +38,14 @@ const ProductInfo = ({
 }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+  const [isOrdering, setIsOrdering] = useState(false);
   const [addToBagTrigger, setAddToBagTrigger] = useState(0);
 
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [createGuestUser] = useCreateGuestUserMutation();
   const [addCartItem] = useAddCartItemMutation();
+  const [createOrder] = useCreateOrderMutation();
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
@@ -92,6 +96,44 @@ const ProductInfo = ({
       });
     } finally {
       setIsAdding(false);
+    }
+  };
+
+  const handleOrderViaWhatsApp = async () => {
+    if (!product) return;
+    setIsOrdering(true);
+    try {
+      if (!isAuthenticated) {
+        try {
+          const guestData = await createGuestUser().unwrap();
+          dispatch(
+            setGuestUser({
+              user: {
+                id: guestData.user.id,
+                is_guest: guestData.user.is_guest,
+                created_at: guestData.user.created_at,
+                guest_expires_at: guestData.user.guest_expires_at ?? null,
+              },
+            })
+          );
+        } catch {
+          toast({ title: "Could not initialise session. Please try again.", variant: "error" });
+          return;
+        }
+      }
+      await createOrder({
+        items: [{ product_id: product.id, quantity }],
+        source: "whatsapp",
+      }).unwrap();
+      const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
+      window.open(
+        buildWhatsAppUrl([{ title: product.title, quantity, price_cents: product.price }], phone),
+        "_blank"
+      );
+    } catch {
+      toast({ title: "Could not place order. Please try again.", variant: "error" });
+    } finally {
+      setIsOrdering(false);
     }
   };
 
@@ -224,6 +266,15 @@ earrings bridge timeless elegance with contemporary minimalism."</p>
           disabled={isAdding || !product || product.stock_quantity <= 0}
         >
           {isAdding ? "Adding..." : "Add to Bag"}
+        </Button>
+
+        <Button
+          className="w-full h-12 bg-[#25D366] hover:bg-[#1da851] text-white font-light rounded-none"
+          onClick={handleOrderViaWhatsApp}
+          disabled={isOrdering || !product || product.stock_quantity <= 0}
+          aria-label="Order via WhatsApp"
+        >
+          {isOrdering ? "Creating order..." : "Order via WhatsApp"}
         </Button>
       </div>
     </div>

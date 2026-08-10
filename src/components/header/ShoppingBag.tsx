@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, Minus, Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -8,6 +8,9 @@ import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { CartItem, updateCartItemQuantity, removeFromCart } from "@/state/cart-slice";
 import { useUpdateCartItemMutation, useRemoveCartItemMutation } from "@/state/cart-api";
+import { useCreateOrderMutation } from "@/state/orders-api";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { toast } from "@/hooks/use-toast";
 
 interface ShoppingBagProps {
   isOpen: boolean;
@@ -109,10 +112,34 @@ const CartItemRow = ({ item }: CartItemRowProps) => {
 
 const ShoppingBag = ({ isOpen, onClose, onViewFavorites }: ShoppingBagProps) => {
   const cartItems = useAppSelector((state) => state.cart.items);
+  const [createOrder] = useCreateOrderMutation();
+  const [isOrdering, setIsOrdering] = useState(false);
 
   if (!isOpen) return null;
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const handleOrderViaWhatsApp = async () => {
+    if (cartItems.length === 0) return;
+    setIsOrdering(true);
+    try {
+      await createOrder({
+        items: cartItems.map((item) => ({ product_id: item.productId, quantity: item.quantity })),
+        source: "whatsapp",
+      }).unwrap();
+      const whatsAppItems = cartItems.map((item) => ({
+        title: item.title,
+        quantity: item.quantity,
+        price_cents: item.price,
+      }));
+      const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
+      window.open(buildWhatsAppUrl(whatsAppItems, phone), "_blank");
+    } catch {
+      toast({ title: "Could not place order. Please try again.", variant: "error" });
+    } finally {
+      setIsOrdering(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 h-screen">
@@ -176,19 +203,14 @@ const ShoppingBag = ({ isOpen, onClose, onViewFavorites }: ShoppingBagProps) => 
                   <span className="text-sm font-medium text-foreground">{formatPrice(subtotal)}</span>
                 </div>
                 
-                <p className="text-xs text-muted-foreground">
-                  Shipping and taxes calculated at checkout
-                </p>
-                
-                <Button 
-                  asChild 
-                  className="w-full rounded-none" 
+                <Button
+                  className="w-full rounded-none bg-[#25D366] hover:bg-[#1da851] text-white"
                   size="lg"
-                  onClick={onClose}
+                  onClick={handleOrderViaWhatsApp}
+                  disabled={isOrdering || cartItems.length === 0}
+                  aria-label="Order via WhatsApp"
                 >
-                  <Link href="/checkout">
-                    Proceed to Checkout
-                  </Link>
+                  {isOrdering ? "Creating order..." : "Order via WhatsApp"}
                 </Button>
                 
                 <Button 
