@@ -14,6 +14,7 @@ import linkBracelet from "@/assets/link-bracelet.png";
 import { StaticImageData } from "next/image";
 import { ProductWithCategory, useGetProductsQuery } from "@/state/products-api";
 import { getImageUrl } from "@/lib/utils";
+import { formatPrice } from "@/lib/currency";
 
 // interface Product {
 //   id: number;
@@ -205,11 +206,6 @@ interface ProductGridProps {
   pagination: PaginationProps;
 }
 
-// Helper function to format price from cents to euros
-const formatPrice = (priceInCents: number): string => {
-  return `€${(priceInCents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-};
-
 const ProductGrid = ({ products, isLoading, error, pagination }: ProductGridProps) => {
 
   if (isLoading) {
@@ -275,7 +271,7 @@ const ProductGrid = ({ products, isLoading, error, pagination }: ProductGridProp
                         {product?.title}
                       </h3>
                       <p className="text-sm font-light text-foreground">
-                        {formatPrice(product?.price)}
+                        {formatPrice(product?.price_amount)}
                       </p>
                     </div>
                   </div>

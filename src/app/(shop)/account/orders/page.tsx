@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useGetMyOrdersQuery, OrderStatus, OrderListItem } from "@/state/orders-api";
 import { useAppSelector } from "@/app/redux";
+import { formatPrice } from "@/lib/currency";
 
 const STATUS_BADGES: Record<OrderStatus, { label: string; className: string }> = {
   pending_payment: { label: "Pending", className: "bg-yellow-100 text-yellow-700" },
@@ -13,9 +14,6 @@ const STATUS_BADGES: Record<OrderStatus, { label: string; className: string }> =
   delivered: { label: "Delivered", className: "bg-emerald-100 text-emerald-700" },
   cancelled: { label: "Cancelled", className: "bg-red-100 text-red-700" },
 };
-
-const formatPrice = (cents: number) =>
-  `€${(cents / 100).toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-IE", { day: "2-digit", month: "long", year: "numeric" });
@@ -89,7 +87,7 @@ export default function MyOrdersPage() {
                     <p className="text-xs text-muted-foreground">{formatDate(order.created_at)}</p>
                   </div>
                   <div className="text-right shrink-0 space-y-2">
-                    <p className="text-sm font-light text-foreground">{formatPrice(order.total_cents)}</p>
+                    <p className="text-sm font-light text-foreground">{formatPrice(order.total_amount)}</p>
                     {badge && (
                       <span className={`inline-block px-2 py-0.5 text-xs rounded-full ${badge.className}`}>
                         {badge.label}

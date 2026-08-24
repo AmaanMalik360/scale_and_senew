@@ -3,7 +3,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface CartItem {
   productId: string;
   title: string;
-  price: number;
+  // price_amount is in minor units of the default currency (paisa for PKR).
+  // NOTE (future — multi-currency): Add currency_code: string here when the
+  // cart API returns it, and pass it to formatPrice() in the UI.
+  price_amount: number;
   image: string;
   categoryName?: string;
   quantity: number;

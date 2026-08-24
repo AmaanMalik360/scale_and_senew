@@ -1,21 +1,18 @@
+import { formatPrice } from "./currency";
+
 export interface WhatsAppItem {
   title: string;
   quantity: number;
-  price_cents: number;
+  // price_amount is in minor units (paisa for PKR).
+  price_amount: number;
 }
 
-const formatPrice = (cents: number): string =>
-  `€${(cents / 100).toLocaleString("en-IE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-
 export const buildWhatsAppUrl = (items: WhatsAppItem[], phone: string): string => {
-  const total = items.reduce((sum, item) => sum + item.price_cents * item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + item.price_amount * item.quantity, 0);
 
   const lines = items.map(
     (item, i) =>
-      `${i + 1}. *${item.title}* x${item.quantity} — ${formatPrice(item.price_cents * item.quantity)}`
+      `${i + 1}. *${item.title}* x${item.quantity} — ${formatPrice(item.price_amount * item.quantity)}`
   );
 
   const message = [

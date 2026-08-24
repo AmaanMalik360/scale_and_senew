@@ -5,7 +5,10 @@ import { getImageUrl } from "@/lib/utils";
 export interface CartItemResponse {
   productId: string;
   title: string;
-  price: number;
+  // price_amount is in minor units of the default currency (paisa for PKR).
+  // NOTE (future — multi-currency): Add currency_code here and pass it to
+  // formatPrice(price_amount, currency_code) in the UI.
+  price_amount: number;
   image: string;
   categoryName?: string | null;
   quantity: number;
@@ -33,7 +36,7 @@ export interface SyncCartRequest {
 interface RawCartItem {
   product_id: string;
   title: string;
-  price: number;
+  price_amount: number;
   image: string;
   category_name?: string | null;
   quantity: number;
@@ -51,7 +54,7 @@ const transformCart = (raw: RawCartResponse): CartResponse => ({
   items: raw.items.map((item) => ({
     productId: item.product_id,
     title: item.title,
-    price: item.price,
+    price_amount: item.price_amount,
     image: item.image ? getImageUrl(item.image) : "",
     categoryName: item.category_name,
     quantity: item.quantity,

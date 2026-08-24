@@ -14,6 +14,7 @@ import { useAddCartItemMutation } from "@/state/cart-api";
 import { useCreateOrderMutation } from "@/state/orders-api";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { capitalizeFirstLetter, getImageUrl } from "@/lib/utils";
+import { formatPrice } from "@/lib/currency";
 import { toast } from "@/hooks/use-toast";
 import { useDebounce } from "@/hooks/useDebounce";
 
@@ -23,12 +24,6 @@ interface ProductInfoProps {
   categoryPath: Category[];
   availableChildren: Category[];
 }
-
-const formatPrice = (cents: number) =>
-  `€${(cents / 100).toLocaleString("en-IE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 
 const ProductInfo = ({
   product,
@@ -81,7 +76,7 @@ const ProductInfo = ({
         addToCart({
           productId: product.id,
           title: product.title,
-          price: product.price,
+          price_amount: product.price_amount,
           image: product.images?.[0] ? getImageUrl(product.images[0]) : "",
           categoryName: product.category?.name,
           quantity,
@@ -127,7 +122,7 @@ const ProductInfo = ({
       }).unwrap();
       const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
       window.open(
-        buildWhatsAppUrl([{ title: product.title, quantity, price_cents: product.price }], phone),
+        buildWhatsAppUrl([{ title: product.title, quantity, price_amount: product.price_amount }], phone),
         "_blank"
       );
     } catch {
@@ -180,9 +175,9 @@ const ProductInfo = ({
           </div>
           <div className="text-right">
             {/* <p className="text-xl font-light text-foreground">€2,850</p> */}
-            {product?.price != null && (
+            {product?.price_amount != null && (
               <p className="text-xl font-light text-foreground">
-                {formatPrice(product.price)}
+                {formatPrice(product.price_amount)}
               </p>
             )}
           </div>

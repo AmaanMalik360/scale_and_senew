@@ -8,18 +8,20 @@ interface CurrencyFieldProps<T extends FieldValues> {
   name: Path<T>;
   label?: string;
   required?: boolean;
+  // NOTE (future — multi-currency): Pass currencySymbol derived from the active
+  // Currency.symbol returned by the API rather than hard-coding it here.
   currencySymbol?: string;
   placeholder?: string;
   disabled?: boolean;
 }
 
-// Stores value in cents (integer). Display is a human-typed "12.50" string.
+// Stores value in minor units (paisa for PKR). Display is a human-typed "2500.00" string.
 // Syncs display off field.value so form.reset() on edit correctly re-derives the display string.
 export const CurrencyField = <T extends FieldValues,>({
   name,
   label,
   required,
-  currencySymbol = "€",
+  currencySymbol = "Rs",
   placeholder = "0.00",
   disabled,
 }: CurrencyFieldProps<T>) => {

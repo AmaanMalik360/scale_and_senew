@@ -5,7 +5,10 @@ import { Address } from "./addresses-api";
 export interface OrderItem {
   product_id: string;
   title: string;
-  price_cents: number;
+  // unit_amount is a price snapshot in minor units at time of order creation.
+  // NOTE (future — multi-currency): Use the parent Order's currency_code to format
+  // via formatPrice(unit_amount, order.currency_code).
+  unit_amount: number;
   quantity: number;
   image?: string;
 }
@@ -13,7 +16,11 @@ export interface OrderItem {
 export interface Order {
   id: string;
   user_id: string;
-  total_cents: number;
+  // total_amount is in minor units of currency_code (paisa for PKR).
+  total_amount: number;
+  // NOTE (future — multi-currency): Pass currency_code to formatPrice() so the UI
+  // formats correctly for each currency without any code changes.
+  currency_code: string;
   status: OrderStatus;
   source?: string;
   notes?: string;
@@ -27,7 +34,8 @@ export interface Order {
 export interface OrderListItem {
   id: string;
   user_id: string;
-  total_cents: number;
+  total_amount: number;
+  currency_code: string;
   status: OrderStatus;
   source?: string;
   customer_name?: string;

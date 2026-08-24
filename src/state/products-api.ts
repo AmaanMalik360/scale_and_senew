@@ -14,7 +14,10 @@ export interface Product {
   title: string;
   description?: string;
   category_id?: number;
-  price: number;
+  // price_amount is in minor units of the default currency (paisa for PKR).
+  // NOTE (future — multi-currency): Add currency_code: string here when the API
+  // returns it and pass it to formatPrice(price_amount, currency_code).
+  price_amount: number;
   stock_quantity: number;
   sku?: string;
   images: string[];
@@ -31,7 +34,7 @@ export interface ProductCreate {
   title: string;
   description?: string;
   category_id?: number;
-  price: number;
+  price_amount: number;
   stock_quantity: number;
   sku?: string;
   images?: File[];
@@ -41,7 +44,7 @@ export interface ProductCreateFormData {
   title: string;
   description?: string;
   category_id?: number;
-  price: number;
+  price_amount: number;
   stock_quantity: number;
   sku?: string;
   attribute_value_ids?: number[];
@@ -52,7 +55,7 @@ export interface ProductUpdate {
   title?: string;
   description?: string;
   category_id?: number;
-  price?: number;
+  price_amount?: number;
   stock_quantity?: number;
   sku?: string;
   images?: string[];
@@ -113,13 +116,14 @@ export const productsApi = baseApi.injectEndpoints({
         { type: "Products", id: productId },
       ],
     }),
-    createProduct: build.mutation<Product, ProductCreateFormData>({
+    createProduct: build.mutation<ProductWithCategory, ProductCreateFormData>({
       query: (product) => {
         const formData = new FormData();
         formData.append("title", product.title);
         if (product.description) formData.append("description", product.description);
         if (product.category_id) formData.append("category_id", product.category_id.toString());
-        formData.append("price", product.price.toString());
+        // price_amount is in minor units (paisa for PKR).
+        formData.append("price_amount", product.price_amount.toString());
         formData.append("stock_quantity", product.stock_quantity.toString());
         if (product.sku) formData.append("sku", product.sku);
         if (product.attribute_value_ids) {
@@ -138,16 +142,28 @@ export const productsApi = baseApi.injectEndpoints({
           body: formData,
         };
       },
-      transformResponse: (response: ProductResponse) => response.data,
+      transformResponse: (response: ProductWithCategoryResponse) => response.data,
       invalidatesTags: ["Products"],
     }),
-    updateProduct: build.mutation<Product, { productId: string; product: ProductUpdate }>({
-      query: ({ productId, product }) => ({
-        url: `products/${productId}`,
-        method: "PUT",
-        body: product,
-      }),
-      transformResponse: (response: ProductResponse) => response.data,
+    updateProduct: build.mutation<ProductWithCategory, { productId: string; product: ProductUpdate }>({
+      query: ({ productId, product }) => {
+        // Build FormData to match the backend's multipart/form-data PATCH endpoint.
+        const formData = new FormData();
+        if (product.title !== undefined) formData.append("title", product.title);
+        if (product.description !== undefined) formData.append("description", product.description);
+        if (product.category_id !== undefined) formData.append("category_id", String(product.category_id));
+        // price_amount is in minor units (paisa for PKR).
+        if (product.price_amount !== undefined) formData.append("price_amount", String(product.price_amount));
+        if (product.stock_quantity !== undefined) formData.append("stock_quantity", String(product.stock_quantity));
+        if (product.sku !== undefined) formData.append("sku", product.sku);
+        if (product.images !== undefined) formData.append("images", JSON.stringify(product.images));
+        return {
+          url: `products/${productId}`,
+          method: "PATCH",
+          body: formData,
+        };
+      },
+      transformResponse: (response: ProductWithCategoryResponse) => response.data,
       invalidatesTags: (result, error, { productId }) => [
         { type: "Products", id: productId },
         "Products",

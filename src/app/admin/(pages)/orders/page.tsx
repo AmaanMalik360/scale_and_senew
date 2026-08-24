@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Eye } from "lucide-react";
 import { useAdminGetOrdersQuery, OrderStatus, OrderListItem } from "@/state/orders-api";
+import { formatPrice } from "@/lib/currency";
 
 const STATUS_TABS: { label: string; value: OrderStatus | "all" }[] = [
   { label: "All", value: "all" },
@@ -23,9 +24,6 @@ const STATUS_BADGES: Record<OrderStatus, { label: string; className: string }> =
   delivered: { label: "Delivered", className: "bg-emerald-100 text-emerald-800" },
   cancelled: { label: "Cancelled", className: "bg-red-100 text-red-800" },
 };
-
-const formatPrice = (cents: number) =>
-  `€${(cents / 100).toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-IE", { day: "2-digit", month: "short", year: "numeric" });
@@ -157,7 +155,7 @@ export default function AdminOrdersPage() {
                       )}
                     </td>
                     <td className="px-4 py-3 font-light text-[var(--admin-text-primary)]">
-                      {formatPrice(order.total_cents)}
+                      {formatPrice(order.total_amount)}
                     </td>
                     <td className="px-4 py-3">
                       {order.source && (

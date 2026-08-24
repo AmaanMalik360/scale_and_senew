@@ -54,7 +54,7 @@ export const useCartSync = () => {
         backendCart.items.map((item) => ({
           productId: item.productId,
           title: item.title,
-          price: item.price,
+          price_amount: item.price_amount,
           image: item.image,
           categoryName: item.categoryName ?? undefined,
           quantity: item.quantity,

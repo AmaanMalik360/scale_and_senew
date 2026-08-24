@@ -17,6 +17,7 @@ import {
 import { useCreateAddressMutation } from "@/state/addresses-api";
 import { useGetProductsQuery } from "@/state/products-api";
 import { getImageUrl } from "@/lib/utils";
+import { formatPrice } from "@/lib/currency";
 
 const STATUS_OPTIONS: { label: string; value: OrderStatus }[] = [
   { label: "Pending Payment", value: "pending_payment" },
@@ -36,9 +37,6 @@ const STATUS_BADGES: Record<OrderStatus, { label: string; className: string }> =
   cancelled: { label: "Cancelled", className: "bg-red-100 text-red-800" },
 };
 
-const formatPrice = (cents: number) =>
-  `€${(cents / 100).toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString("en-IE", {
     day: "2-digit",
@@ -53,7 +51,7 @@ const shortId = (id: string) => id.slice(0, 8).toUpperCase();
 interface EditableItemRow {
   product_id: string;
   title: string;
-  price_cents: number;
+  unit_amount: number;
   quantity: number;
   image?: string;
 }
@@ -108,7 +106,7 @@ export default function AdminOrderDetailPage() {
         order.items.map((item) => ({
           product_id: item.product_id,
           title: item.title,
-          price_cents: item.price_cents,
+          unit_amount: item.unit_amount,
           quantity: item.quantity,
           image: item.image,
         }))
@@ -135,7 +133,7 @@ export default function AdminOrderDetailPage() {
     setEditItems((prev) => prev.filter((item) => item.product_id !== productId));
   };
 
-  const handleAddProduct = (product: { id: string; title: string; price: number; images?: string[] }) => {
+  const handleAddProduct = (product: { id: string; title: string; price_amount: number; images?: string[] }) => {
     const existing = editItems.find((i) => i.product_id === product.id);
     if (existing) {
       setEditItems((prev) =>
@@ -147,7 +145,7 @@ export default function AdminOrderDetailPage() {
         {
           product_id: product.id,
           title: product.title,
-          price_cents: product.price,
+          unit_amount: product.price_amount,
           quantity: 1,
           image: product.images?.[0] ? getImageUrl(product.images[0]) : undefined,
         },
@@ -241,7 +239,7 @@ export default function AdminOrderDetailPage() {
     );
   }
 
-  const currentTotal = editItems.reduce((sum, item) => sum + item.price_cents * item.quantity, 0);
+  const currentTotal = editItems.reduce((sum, item) => sum + item.unit_amount * item.quantity, 0);
   const badge = STATUS_BADGES[order.status as OrderStatus];
   const showShipped = ["shipped", "delivered"].includes(order.status);
 
@@ -301,7 +299,7 @@ export default function AdminOrderDetailPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-light text-[var(--admin-text-primary)] truncate">{item.title}</p>
-                    <p className="text-xs text-[var(--admin-grey)]">{formatPrice(item.price_cents)} each</p>
+                    <p className="text-xs text-[var(--admin-grey)]">{formatPrice(item.unit_amount)} each</p>
                   </div>
                   <input
                     type="number"
@@ -311,7 +309,7 @@ export default function AdminOrderDetailPage() {
                     className="w-16 px-2 py-1 text-sm text-center border border-[var(--admin-border-light)] rounded focus:outline-none focus:ring-1 focus:ring-[var(--admin-primary)]"
                   />
                   <p className="text-sm font-light text-[var(--admin-text-primary)] w-20 text-right">
-                    {formatPrice(item.price_cents * item.quantity)}
+                    {formatPrice(item.unit_amount * item.quantity)}
                   </p>
                   <button
                     onClick={() => handleRemoveItem(item.product_id)}
@@ -352,7 +350,7 @@ export default function AdminOrderDetailPage() {
                           className="w-full text-left px-3 py-2 text-sm hover:bg-[var(--admin-bg)] flex justify-between items-center"
                         >
                           <span className="text-[var(--admin-text-primary)] truncate">{p.title}</span>
-                          <span className="text-[var(--admin-grey)] ml-2 shrink-0">{formatPrice(p.price)}</span>
+                          <span className="text-[var(--admin-grey)] ml-2 shrink-0">{formatPrice(p.price_amount)}</span>
                         </button>
                       ))}
                     </div>

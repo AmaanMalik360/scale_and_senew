@@ -27,7 +27,8 @@ import {
 const productSchema = z.object({
   title: z.string().min(1, "Product name is required"),
   description: z.string().optional(),
-  price: z.number().min(0, "Price must be a positive number"),
+  // price_amount is stored in minor units (paisa for PKR); CurrencyField handles the conversion.
+  price_amount: z.number().min(0, "Price must be a positive number"),
   stock_quantity: z.number().min(0, "Stock quantity must be a positive number"),
   sku: z.string().optional(),
   category_id: z.number().nullable(),
@@ -48,7 +49,7 @@ export default function AddProductPage() {
     defaultValues: {
       title: "",
       description: "",
-      price: 0,
+      price_amount: 0,
       stock_quantity: 0,
       sku: "",
       category_id: null,
@@ -85,7 +86,7 @@ export default function AddProductPage() {
         title: data.title,
         description: data.description || undefined,
         category_id: data.category_id || undefined,
-        price: data.price,
+        price_amount: data.price_amount,
         stock_quantity: data.stock_quantity,
         sku: data.sku || undefined,
         attribute_value_ids: attributeValueIds.length > 0 ? attributeValueIds : undefined,
@@ -160,7 +161,7 @@ export default function AddProductPage() {
               Pricing
             </h2>
             <CurrencyField<ProductFormData>
-              name="price"
+              name="price_amount"
               label="Product Price"
               required
             />

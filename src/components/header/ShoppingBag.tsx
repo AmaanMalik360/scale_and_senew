@@ -10,6 +10,7 @@ import { CartItem, updateCartItemQuantity, removeFromCart } from "@/state/cart-s
 import { useUpdateCartItemMutation, useRemoveCartItemMutation } from "@/state/cart-api";
 import { useCreateOrderMutation } from "@/state/orders-api";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { formatPrice } from "@/lib/currency";
 import { toast } from "@/hooks/use-toast";
 
 interface ShoppingBagProps {
@@ -17,12 +18,6 @@ interface ShoppingBagProps {
   onClose: () => void;
   onViewFavorites?: () => void;
 }
-
-const formatPrice = (cents: number) =>
-  `€${(cents / 100).toLocaleString("en-IE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 
 interface CartItemRowProps {
   item: CartItem;
@@ -82,7 +77,7 @@ const CartItemRow = ({ item }: CartItemRowProps) => {
             <p className="text-sm font-light text-muted-foreground">{item.categoryName}</p>
             <h3 className="text-sm font-medium text-foreground">{item.title}</h3>
           </div>
-          <p className="text-sm font-light text-foreground">{formatPrice(item.price)}</p>
+          <p className="text-sm font-light text-foreground">{formatPrice(item.price_amount)}</p>
         </div>
         <div className="flex items-center gap-2 mt-3">
           <div className="flex items-center border border-border">
@@ -117,7 +112,7 @@ const ShoppingBag = ({ isOpen, onClose, onViewFavorites }: ShoppingBagProps) => 
 
   if (!isOpen) return null;
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price_amount * item.quantity, 0);
 
   const handleOrderViaWhatsApp = async () => {
     if (cartItems.length === 0) return;
@@ -130,7 +125,7 @@ const ShoppingBag = ({ isOpen, onClose, onViewFavorites }: ShoppingBagProps) => 
       const whatsAppItems = cartItems.map((item) => ({
         title: item.title,
         quantity: item.quantity,
-        price_cents: item.price,
+        price_amount: item.price_amount,
       }));
       const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
       window.open(buildWhatsAppUrl(whatsAppItems, phone), "_blank");

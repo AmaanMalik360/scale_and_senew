@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ArrowLeft, Package, MapPin, Truck } from "lucide-react";
 import { useGetMyOrderQuery, OrderStatus } from "@/state/orders-api";
 import { useAppSelector } from "@/app/redux";
+import { formatPrice } from "@/lib/currency";
 
 const STATUS_BADGES: Record<OrderStatus, { label: string; className: string }> = {
   pending_payment: { label: "Pending", className: "bg-yellow-100 text-yellow-700" },
@@ -15,9 +16,6 @@ const STATUS_BADGES: Record<OrderStatus, { label: string; className: string }> =
   delivered: { label: "Delivered", className: "bg-emerald-100 text-emerald-700" },
   cancelled: { label: "Cancelled", className: "bg-red-100 text-red-700" },
 };
-
-const formatPrice = (cents: number) =>
-  `€${(cents / 100).toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString("en-IE", {
@@ -73,7 +71,7 @@ export default function MyOrderDetailPage() {
   }
 
   const badge = STATUS_BADGES[order.status as OrderStatus];
-  const total = order.items.reduce((sum, item) => sum + item.price_cents * item.quantity, 0);
+  const total = order.items.reduce((sum, item) => sum + item.unit_amount * item.quantity, 0);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-8">
@@ -124,18 +122,18 @@ export default function MyOrderDetailPage() {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-light text-foreground truncate">{item.title}</p>
                 <p className="text-xs text-muted-foreground">
-                  Qty: {item.quantity} × {formatPrice(item.price_cents)}
+                  Qty: {item.quantity} × {formatPrice(item.unit_amount)}
                 </p>
               </div>
               <p className="text-sm font-light text-foreground shrink-0">
-                {formatPrice(item.price_cents * item.quantity)}
+                {formatPrice(item.unit_amount * item.quantity)}
               </p>
             </div>
           ))}
         </div>
         <div className="flex items-center justify-between px-5 py-4 border-t border-border bg-muted/5">
           <span className="text-sm font-light text-muted-foreground">Total</span>
-          <span className="text-sm font-medium text-foreground">{formatPrice(order.total_cents)}</span>
+          <span className="text-sm font-medium text-foreground">{formatPrice(order.total_amount)}</span>
         </div>
       </div>
 
