@@ -60,7 +60,7 @@ export default function EditProductPage() {
     form.reset({
       title: product.title,
       description: product.description ?? "",
-      price: product.price,
+      price: product.price_amount,
       stock_quantity: product.stock_quantity,
       sku: product.sku ?? "",
       category_id: product.category_id ?? null,
@@ -75,7 +75,7 @@ export default function EditProductPage() {
           title: data.title,
           description: data.description || undefined,
           category_id: data.category_id || undefined,
-          price: data.price,
+          price_amount: data.price,
           stock_quantity: data.stock_quantity,
           sku: data.sku || undefined,
         },
