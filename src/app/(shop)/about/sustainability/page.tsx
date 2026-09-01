@@ -12,7 +12,7 @@ export default function Sustainability() {
       <main className="w-full lg:w-[70vw] lg:ml-auto px-6">
       <PageHeader 
         title="Sustainability" 
-        subtitle="Creating beautiful jewelry while protecting our planet for future generations"
+        subtitle="Building better leather goods with responsible sourcing and mindful production"
       />
       
       <ContentSection title="Our Environmental Commitment">
@@ -20,13 +20,13 @@ export default function Sustainability() {
           <div className="space-y-6">
             <h3 className="text-xl font-light text-foreground">Ethical Sourcing</h3>
             <p className="text-muted-foreground leading-relaxed">
-              We partner only with suppliers who share our commitment to ethical practices. Every gemstone and precious metal in our collection is sourced responsibly, with full transparency in our supply chain.
+              We work with suppliers who can provide clarity on leather origin, treatment, and handling. We prioritize partners that follow responsible practices and consistent quality standards.
             </p>
           </div>
           <div className="space-y-6">
-            <h3 className="text-xl font-light text-foreground">Recycled Materials</h3>
+            <h3 className="text-xl font-light text-foreground">Low-Waste Crafting</h3>
             <p className="text-muted-foreground leading-relaxed">
-              We prioritize the use of recycled precious metals and ethically sourced gemstones, reducing our environmental impact while maintaining the highest quality standards.
+              We optimize cutting patterns and production batches to reduce material waste, and we repurpose usable offcuts for small accessories wherever possible.
             </p>
           </div>
         </div>
@@ -35,16 +35,16 @@ export default function Sustainability() {
       <ContentSection title="Sustainable Practices">
         <div className="space-y-8">
           <div className="bg-muted/10 rounded-lg p-8">
-            <h3 className="text-xl font-light text-foreground mb-4">Our Carbon Neutral Initiative</h3>
+            <h3 className="text-xl font-light text-foreground mb-4">Small-Batch Production</h3>
             <p className="text-muted-foreground leading-relaxed">
-              We are committed to becoming carbon neutral by 2025. This includes optimizing our manufacturing processes, using renewable energy, and investing in carbon offset programs.
+              We intentionally keep production runs focused to avoid overstock and unnecessary inventory waste. This helps us maintain better quality control and reduce excess manufacturing.
             </p>
           </div>
           
           <div className="bg-muted/10 rounded-lg p-8">
-            <h3 className="text-xl font-light text-foreground mb-4">Waste Reduction</h3>
+            <h3 className="text-xl font-light text-foreground mb-4">Long Product Life</h3>
             <p className="text-muted-foreground leading-relaxed">
-              Our zero-waste initiative ensures that all materials are utilized efficiently. We recycle metal scraps, repurpose gemstone fragments, and use eco-friendly packaging materials.
+              Durable construction is part of our sustainability strategy. Products that last longer reduce replacement cycles and encourage conscious buying over fast consumption.
             </p>
           </div>
         </div>

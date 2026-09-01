@@ -1,5 +1,3 @@
-import WalletImage from "@/assets/scale_senew/Crocodile Scale Leather Brown Wallet.jpeg";
-import LadiesBag from "@/assets/scale_senew/Snake Leather White Ladies Bag.jpeg";
 // import earringsCollection from "@/assets/earrings-collection.png";
 // import linkBracelet from "@/assets/link-bracelet.png";
 import Link from "next/link";
@@ -13,7 +11,7 @@ const FiftyFiftySection = () => {
           <Link href="/category/wallets" className="block">
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
-                src={WalletImage.src} 
+                src="/products/assets/Crocodile%20leather%20Brown%20Wallet.jpeg" 
                 alt="Crocodile Scale Wallet" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
@@ -21,10 +19,10 @@ const FiftyFiftySection = () => {
           </Link>
           <div className="">
             <h3 className="text-sm font-normal text-foreground mb-1">
-              Crocodile Scale Wallet
+              Crocodile Leather Wallet
             </h3>
             <p className="text-sm font-light text-foreground">
-              Premium crocodile scale leather wallet with elegant design
+              Signature leather finish designed for everyday carry.
             </p>
           </div>
         </div>
@@ -33,7 +31,7 @@ const FiftyFiftySection = () => {
           <Link href="/category/bags" className="block">
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
-                src={LadiesBag.src} 
+                src="/products/assets/Snake%20Leather%20White%20Ladies%20Bag.jpeg" 
                 alt="Snake Leather White Ladies Bag" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
@@ -41,10 +39,10 @@ const FiftyFiftySection = () => {
           </Link>
           <div className="">
             <h3 className="text-sm font-normal text-foreground mb-1">
-              Ladies Bag
+              Snake Leather Bag
             </h3>
             <p className="text-sm font-light text-foreground">
-              Elegant and sophisticated designs for every occasion
+              Structured silhouette with premium exotic leather texture.
             </p>
           </div>
         </div>

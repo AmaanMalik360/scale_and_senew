@@ -58,11 +58,10 @@ const Navigation = () => {
   // Preload dropdown images for faster display
   useEffect(() => {
     const imagesToPreload = [
-      "/rings-collection.png",
-      "/earrings-collection.png", 
-      "/arcus-bracelet.png",
-      "/span-bracelet.png",
-      "/founders.png"
+      "/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg",
+      "/products/assets/Snake%20Leather%20White%20Ladies%20Bag.jpeg",
+      "/products/new-assets/Red%20HandBag%20Crocodile%20%20(1).png",
+      "/products/new-assets/Snake%20Leather%20Ladies%20Bag%20(1).png"
     ];
     
     imagesToPreload.forEach(src => {
@@ -72,12 +71,12 @@ const Navigation = () => {
   }, []);
 
   const popularSearches = [
-    "Gold Rings",
-    "Silver Necklaces", 
-    "Pearl Earrings",
-    "Designer Bracelets",
-    "Wedding Rings",
-    "Vintage Collection"
+    "Crocodile Wallet",
+    "Snake Leather Bag",
+    "Long Wallet",
+    "Card Holder",
+    "Black Wallet",
+    "Exotic Leather Collection"
   ];
   
   // Transform categories into navItems structure
@@ -121,7 +120,7 @@ const Navigation = () => {
         "Store Locator"
       ],
       images: [
-        { src: "/founders.png", alt: "Company Founders", label: "Read our story" }
+        { src: "/products/new-assets/Python%20SKin%201%20smoke.png", alt: "Scale and Senew craftsmanship", label: "Read our story" }
       ]
     };
 
@@ -185,8 +184,8 @@ const Navigation = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <Link href="/" className="block">
             <img 
-              src="/LINEA-1.svg" 
-              alt="LINEA" 
+              src="/Scale & Senew.svg" 
+              alt="Scale and Senew" 
               className="h-6 w-auto"
             />
           </Link>
@@ -281,8 +280,8 @@ const Navigation = () => {
                     // Determine the link destination based on dropdown and image
                     let linkTo = "/";
                     if (activeDropdown === "Shop") {
-                      if (image.label === "Rings") linkTo = "/category/rings";
-                      else if (image.label === "Earrings") linkTo = "/category/earrings";
+                      if (image.label === "Wallets") linkTo = "/category/wallets";
+                      else if (image.label === "Bags") linkTo = "/category/bags";
                     } else if (activeDropdown === "New in") {
                       if (image.label === "Arcus Bracelet") linkTo = "/product/arcus-bracelet";
                       else if (image.label === "Span Bracelet") linkTo = "/product/span-bracelet";
@@ -327,7 +326,7 @@ const Navigation = () => {
                   </svg>
                   <input
                     type="text"
-                    placeholder="Search for jewelry..."
+                    placeholder="Search wallets, bags, and card holders..."
                     className="flex-1 bg-transparent text-nav-foreground placeholder:text-nav-foreground/60 outline-none text-lg"
                     autoFocus
                   />

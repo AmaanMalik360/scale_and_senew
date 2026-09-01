@@ -6,18 +6,18 @@ import AboutSidebar from "../../../../components/about/AboutSidebar";
 export default function StoreLocator() {
   const stores = [
     {
-      name: "LINEA Madison Avenue",
-      address: "789 Madison Avenue, New York, NY 10065",
-      phone: "+1 (212) 555-0123",
-      hours: "Mon-Sat: 10AM-8PM, Sun: 12PM-6PM",
-      services: ["Personal Shopping", "Custom Design", "Repairs", "Appraisals"]
+      name: "Scale & Senew Studio",
+      address: "Lahore, Pakistan",
+      phone: "+92 300 0000000",
+      hours: "Mon-Sat: 10AM-7PM",
+      services: ["Product Viewing", "Custom Orders", "Leather Care Guidance"]
     },
     {
-      name: "LINEA Beverly Hills",
-      address: "456 Rodeo Drive, Beverly Hills, CA 90210",
-      phone: "+1 (310) 555-0456",
-      hours: "Mon-Sat: 10AM-7PM, Sun: 11AM-5PM",
-      services: ["Personal Shopping", "Custom Design", "Repairs"]
+      name: "Online WhatsApp Store",
+      address: "Available nationwide",
+      phone: "+92 300 0000000",
+      hours: "Daily: 10AM-10PM",
+      services: ["Order Assistance", "Style Consultation", "Delivery Support"]
     }
   ];
 
@@ -30,7 +30,7 @@ export default function StoreLocator() {
       <main className="w-full lg:w-[70vw] lg:ml-auto px-6">
         <PageHeader 
           title="Store Locator" 
-          subtitle="Visit our flagship stores and experience LINEA in person"
+          subtitle="Connect with Scale & Senew through our studio and online support"
         />
         
         <ContentSection>

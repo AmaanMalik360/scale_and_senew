@@ -5,66 +5,71 @@ import {
 } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
 import Link from "next/link";
-import pantheonImage from "@/assets/pantheon.jpg";
-import eclipseImage from "@/assets/eclipse.jpg";
-import haloImage from "@/assets/halo.jpg";
-import obliqueImage from "@/assets/oblique.jpg";
-import lintelImage from "@/assets/lintel.jpg";
-import shadowlineImage from "@/assets/shadowline.jpg";
-import organicEarring from "@/assets/organic-earring.png";
-import linkBracelet from "@/assets/link-bracelet.png";
-import { StaticImageData } from "next/image";
 
 interface Product {
   id: number;
   name: string;
   category: string;
   price: string;
-  image: StaticImageData;
+  image: string;
+  hoverImage: string;
+  href: string;
 }
 
 const products: Product[] = [
   {
     id: 1,
-    name: "Pantheon",
-    category: "Earrings",
-    price: "€2,850",
-    image: pantheonImage,
+    name: "Crocodile Black Wallet",
+    category: "Wallets",
+    price: "Rs 18,500",
+    image: "/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg",
+    hoverImage: "/products/new-assets/Black%20wallet%20sk%20(2).png",
+    href: "/category/wallets",
   },
   {
     id: 2,
-    name: "Eclipse",
-    category: "Bracelets",
-    price: "€3,200",
-    image: eclipseImage,
+    name: "Snake Long Wallet",
+    category: "Long Wallets",
+    price: "Rs 22,000",
+    image: "/products/assets/Snake%20Leather%20Black%20Long%20Wallet.jpeg",
+    hoverImage: "/products/new-assets/Long%20snake%20skin%20%20(2).png",
+    href: "/category/wallets",
   },
   {
     id: 3,
-    name: "Halo",
-    category: "Earrings",
-    price: "€1,950",
-    image: haloImage,
+    name: "Emerald Card Holder",
+    category: "Card Holders",
+    price: "Rs 9,500",
+    image: "/products/assets/Emerald%20Mosaic%20Card%20Holder.jpeg",
+    hoverImage: "/products/new-assets/wallet%201%20(1).png",
+    href: "/category/card-holders",
   },
   {
     id: 4,
-    name: "Oblique",
-    category: "Earrings",
-    price: "€1,650",
-    image: obliqueImage,
+    name: "White Snake Ladies Bag",
+    category: "Bags",
+    price: "Rs 29,000",
+    image: "/products/assets/Snake%20Leather%20White%20Ladies%20Bag.jpeg",
+    hoverImage: "/products/new-assets/Snake%20Leather%20Ladies%20Bag%20(4).png",
+    href: "/category/bags",
   },
   {
     id: 5,
-    name: "Lintel",
-    category: "Earrings",
-    price: "€2,250",
-    image: lintelImage,
+    name: "Red Snake Small Wallet",
+    category: "Wallets",
+    price: "Rs 16,500",
+    image: "/products/new-assets/Red%20Snake%20Wallet%20Small%20(1).png",
+    hoverImage: "/products/new-assets/Red%20Snake%20Wallet%20Small%20(4).png",
+    href: "/category/wallets",
   },
   {
     id: 6,
-    name: "Shadowline",
-    category: "Bracelets",
-    price: "€3,950",
-    image: shadowlineImage,
+    name: "Red Crocodile Hand Bag",
+    category: "Bags",
+    price: "Rs 34,000",
+    image: "/products/new-assets/Red%20HandBag%20Crocodile%20%20(1).png",
+    hoverImage: "/products/new-assets/Red%20HandBag%20Crocodile%20%20(3).png",
+    href: "/category/bags",
   },
 ];
 
@@ -84,17 +89,17 @@ const ProductCarousel = () => {
                  key={product.id}
                  className="basis-1/2 md:basis-1/3 lg:basis-1/4 pr-2 md:pr-4"
                >
-                 <Link href={`/product/${product.id}`}>
+                 <Link href={product.href}>
                   <Card className="border-none shadow-none bg-transparent group">
                     <CardContent className="p-0">
                       <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">
                         <img
-                          src={product.image.src}
+                          src={product.image}
                           alt={product.name}
                           className="w-full h-full object-cover transition-all duration-300 group-hover:opacity-0"
                         />
                         <img
-                          src={(product.category === "Earrings" ? organicEarring : linkBracelet).src}
+                          src={product.hoverImage}
                           alt={`${product.name} lifestyle`}
                           className="absolute inset-0 w-full h-full object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
                         />

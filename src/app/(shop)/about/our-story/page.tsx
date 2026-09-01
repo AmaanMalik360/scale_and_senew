@@ -13,15 +13,15 @@ export default function OurStory() {
       <main className="w-full lg:w-[70vw] lg:ml-auto px-6">
         <PageHeader 
           title="Our Story" 
-          subtitle="A journey of passion, craftsmanship, and timeless elegance"
+          subtitle="A journey of craftsmanship, exotic leathers, and everyday utility"
         />
         
         <ContentSection>
           <ImageTextBlock
-            image="/founders.png"
-            imageAlt="Company founders"
-            title="Founded on Passion"
-            content="LINEA Jewelry was born from a shared vision of creating timeless pieces that transcend fleeting trends. Our founders, united by their passion for exceptional craftsmanship and sustainable practices, established the brand with a commitment to creating jewelry that tells a story - your story."
+            image="/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg"
+            imageAlt="Scale and Senew crocodile leather wallet"
+            title="Built for Lasting Use"
+            content="Scale and Senew began with a simple idea: everyday carry should feel premium, durable, and personal. We focus on exotic leather wallets, bags, and card holders made for people who value design, function, and long-term quality."
             imagePosition="left"
           />
         </ContentSection>
@@ -31,13 +31,13 @@ export default function OurStory() {
             <div className="space-y-6">
               <h3 className="text-xl font-light text-foreground">Traditional Craftsmanship</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Every piece in our collection is meticulously handcrafted by skilled artisans who have honed their craft over generations. We honor traditional techniques while embracing modern innovation, ensuring each piece meets our exacting standards for quality and beauty.
+                Our artisans hand-finish each wallet and bag with careful stitching, edge work, and structure control. We preserve proven leathercraft methods while refining details for modern daily use.
               </p>
             </div>
             <div className="space-y-6">
-              <h3 className="text-xl font-light text-foreground">Sustainable Future</h3>
+              <h3 className="text-xl font-light text-foreground">Responsible Sourcing</h3>
               <p className="text-muted-foreground leading-relaxed">
-                We believe luxury and sustainability can coexist beautifully. Our commitment to ethical sourcing, recycled materials, and responsible manufacturing practices ensures that every piece you wear contributes to a more sustainable future.
+                We work with vetted suppliers and small-batch production partners to maintain traceability and consistency. Our goal is fewer, better-made products that stay in rotation for years.
               </p>
             </div>
           </div>
@@ -48,19 +48,19 @@ export default function OurStory() {
             <div className="space-y-4">
               <h3 className="text-lg font-light text-foreground">Excellence</h3>
               <p className="text-muted-foreground">
-                We pursue perfection in every detail, from the initial design concept to the final polish.
+                We pursue precision in cut, finish, and hardware selection for every release.
               </p>
             </div>
             <div className="space-y-4">
               <h3 className="text-lg font-light text-foreground">Authenticity</h3>
               <p className="text-muted-foreground">
-                Each piece reflects genuine craftsmanship and tells an authentic story of artistry and care.
+                Every item reflects real leather character and honest craftsmanship.
               </p>
             </div>
             <div className="space-y-4">
               <h3 className="text-lg font-light text-foreground">Innovation</h3>
               <p className="text-muted-foreground">
-                We continuously evolve our designs and techniques while honoring timeless aesthetic principles.
+                We keep evolving silhouettes, pocket layouts, and carry formats without losing timeless appeal.
               </p>
             </div>
           </div>

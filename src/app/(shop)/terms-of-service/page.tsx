@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - LINEA Jewelry",
-  description: "Terms of service for LINEA Jewelry",
+  title: "Terms of Service - Scale & Senew",
+  description: "Terms of service for Scale & Senew",
 };
 
 export default function TermsOfService() {
@@ -18,7 +18,7 @@ export default function TermsOfService() {
           <section className="mb-8">
             <h2 className="text-2xl font-light text-foreground mb-4">Agreement to Terms</h2>
             <p className="text-muted-foreground mb-4">
-              By accessing and using LINEA Jewelry's website and services, you accept and agree 
+              By accessing and using Scale & Senew's website and services, you accept and agree 
               to be bound by the terms and provision of this agreement.
             </p>
           </section>
@@ -26,7 +26,7 @@ export default function TermsOfService() {
           <section className="mb-8">
             <h2 className="text-2xl font-light text-foreground mb-4">Use License</h2>
             <p className="text-muted-foreground mb-4">
-              Permission is granted to temporarily download one copy of the materials on LINEA Jewelry's 
+              Permission is granted to temporarily download one copy of the materials on Scale & Senew's 
               website for personal, non-commercial transitory viewing only.
             </p>
           </section>
@@ -51,7 +51,7 @@ export default function TermsOfService() {
           <section className="mb-8">
             <h2 className="text-2xl font-light text-foreground mb-4">Contact Information</h2>
             <p className="text-muted-foreground mb-4">
-              Questions about the Terms of Service should be sent to: legal@lineajewelry.com
+              Questions about the Terms of Service should be sent to: legal@scaleandsenew.com
             </p>
           </section>
         </div>

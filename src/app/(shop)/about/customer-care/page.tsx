@@ -16,7 +16,7 @@ export default function CustomerCare() {
       <main className="w-full lg:w-[70vw] lg:ml-auto px-6">
         <PageHeader 
           title="Customer Care" 
-          subtitle="We're here to help with any questions or concerns"
+          subtitle="Support for orders, care, shipping, and returns"
         />
         
         <ContentSection title="Contact Us">
@@ -24,12 +24,12 @@ export default function CustomerCare() {
             <div className="space-y-6">
               <h3 className="text-xl font-light text-foreground">Get in Touch</h3>
               <p className="text-muted-foreground">
-                Our customer care team is available Monday through Friday, 9 AM to 6 PM EST.
+                Our support team is available Monday through Saturday, 10 AM to 7 PM PKT.
               </p>
               <div className="space-y-4">
-                <p><strong>Email:</strong> care@lineajewelry.com</p>
-                <p><strong>Phone:</strong> 1-800-LINEA (1-800-54632)</p>
-                <p><strong>Live Chat:</strong> Available on our website</p>
+                <p><strong>Email:</strong> care@scaleandsenew.com</p>
+                <p><strong>Phone:</strong> +92 300 0000000</p>
+                <p><strong>WhatsApp:</strong> Available for quick order support</p>
               </div>
             </div>
             
@@ -51,22 +51,19 @@ export default function CustomerCare() {
             <AccordionItem value="shipping">
               <AccordionTrigger>What are your shipping options?</AccordionTrigger>
               <AccordionContent>
-                We offer standard shipping (5-7 days), express shipping (2-3 days), and overnight shipping. 
-                Standard shipping is free on orders over $100.
+                We offer standard and express delivery options based on your city. Delivery timelines are shared on order confirmation and can vary during peak periods.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="returns">
               <AccordionTrigger>What is your return policy?</AccordionTrigger>
               <AccordionContent>
-                We accept returns within 30 days of purchase. Items must be in their original condition 
-                with all tags and packaging intact.
+                Returns are accepted for eligible products within the stated return window, provided the item is unused and in original condition. Custom or personalized pieces may not be returnable.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="care">
-              <AccordionTrigger>How do I care for my jewelry?</AccordionTrigger>
+              <AccordionTrigger>How do I care for exotic leather products?</AccordionTrigger>
               <AccordionContent>
-                Store your jewelry in a soft pouch or lined box. Clean with a soft cloth and avoid 
-                exposure to harsh chemicals or extreme temperatures.
+                Keep your wallet or bag dry, store it away from direct sunlight, and wipe with a soft dry cloth. Avoid harsh chemicals and prolonged moisture exposure.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
