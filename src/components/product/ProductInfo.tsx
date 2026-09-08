@@ -174,7 +174,7 @@ const ProductInfo = ({
             </h1>
           </div>
           <div className="text-right">
-            {/* <p className="text-xl font-light text-foreground">€2,850</p> */}
+            {/* <p className="text-xl font-light text-foreground">Rs2,850</p> */}
             {product?.price_amount != null && (
               <p className="text-xl font-light text-foreground">
                 {formatPrice(product.price_amount)}

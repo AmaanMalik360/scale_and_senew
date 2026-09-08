@@ -21,22 +21,22 @@ const PAGE_SIZE_OPTIONS = [2, 5, 10, 20, 50];
 
 const PRICE_OPTIONS = [
   { 
-    label: "Under €10", 
+    label: "Under Rs10", 
     // value: "0-100000", 
     values: { min: 0, max: 1000 } 
   },
   { 
-    label: "€10 – €20", 
+    label: "Rs10 – Rs20", 
     // value: "100000-200000", 
     values: { min: 1000, max: 2000 } 
   },
   { 
-    label: "€20 – €30", 
+    label: "Rs20 – Rs30", 
     // value: "200000-300000", 
     values: { min: 2000, max: 3000 } 
   },
   { 
-    label: "Over €30", 
+    label: "Over Rs30", 
     // value: "300000-", 
     values: { min: 3000 } 
   },

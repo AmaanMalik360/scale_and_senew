@@ -14,7 +14,7 @@ import { useGetCategoriesQuery } from "@/state/categories-api";
 //     {
 //       id: 1,
 //       name: "Pantheon",
-//       price: "€2,850",
+//       price: "Rs2,850",
 //       image: pantheonImage,
 //       quantity: 1,
 //       category: "Earrings"
@@ -22,7 +22,7 @@ import { useGetCategoriesQuery } from "@/state/categories-api";
 //     {
 //       id: 2,
 //       name: "Eclipse",
-//       price: "€3,200", 
+//       price: "Rs3,200", 
 //       image: eclipseImage,
 //       quantity: 1,
 //       category: "Bracelets"
@@ -30,7 +30,7 @@ import { useGetCategoriesQuery } from "@/state/categories-api";
 //     {
 //       id: 3,
 //       name: "Halo",
-//       price: "€1,950",
+//       price: "Rs1,950",
 //       image: haloImage, 
 //       quantity: 1,
 //       category: "Earrings"
