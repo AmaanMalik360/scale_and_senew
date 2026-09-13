@@ -4,7 +4,6 @@ import Link from "next/link";
 import ProductImageGallery from "../../../../components/product/ProductImageGallery";
 import ProductInfo from "../../../../components/product/ProductInfo";
 import ProductDescription from "../../../../components/product/ProductDescription";
-import ProductCarousel from "../../../../components/content/ProductCarousel";
 import { useCategoryPath } from "../../category/[...slug]/hooks";
 import { useChildCategories } from "../../category/[...slug]/hooks";
 import { useFlatCategories } from "../../category/[...slug]/hooks";

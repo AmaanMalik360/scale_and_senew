@@ -11,7 +11,7 @@ const FiftyFiftySection = () => {
           <Link href="/category/wallets" className="block">
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
-                src="/products/assets/Crocodile%20leather%20Brown%20Wallet.jpeg" 
+                src="/products/new-assets/Black wallet sk (1).png" 
                 alt="Crocodile Scale Wallet" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
@@ -19,7 +19,7 @@ const FiftyFiftySection = () => {
           </Link>
           <div className="">
             <h3 className="text-sm font-normal text-foreground mb-1">
-              Crocodile Leather Wallet
+              Black Snake Wallet
             </h3>
             <p className="text-sm font-light text-foreground">
               Signature leather finish designed for everyday carry.

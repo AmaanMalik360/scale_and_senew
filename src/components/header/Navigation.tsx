@@ -141,7 +141,7 @@ const Navigation = () => {
         backdropFilter: 'blur(10px)'
       }}
     >
-      <div className="flex items-center justify-between h-16 px-6">
+      <div className="flex items-center justify-between h-20 px-6">
         {/* Mobile hamburger button */}
         <button
           className="lg:hidden p-2 mt-0.5 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
@@ -184,9 +184,9 @@ const Navigation = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <Link href="/" className="block">
             <img 
-              src="/Scale & Senew.svg" 
+              src="/Scale & Senew White.svg" 
               alt="Scale and Senew" 
-              className="h-6 w-auto"
+              className="h-16 w-auto bg-white"
             />
           </Link>
         </div>
