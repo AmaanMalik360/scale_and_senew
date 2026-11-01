@@ -7,8 +7,6 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
 import { Checkbox } from "../../components/ui/checkbox";
-import pantheonImage from "@/assets/pantheon.jpg";
-import eclipseImage from "@/assets/eclipse.jpg";
 import Footer from "@/components/footer/Footer";
 
 const Checkout = () => {
@@ -51,18 +49,18 @@ const Checkout = () => {
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
-      name: "Pantheon Ring",
-      price: "Rs2,450",
+      name: "Crocodile Black Wallet",
+      price: "Rs18,500",
       quantity: 1,
-      image: pantheonImage,
-      size: "54 EU / 7 US"
+      image: "/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg",
+      size: "Standard"
     },
     {
       id: 2,
-      name: "Eclipse Earrings", 
-      price: "Rs1,850",
+      name: "Snake Leather Card Holder",
+      price: "Rs9,500",
       quantity: 1,
-      image: eclipseImage
+      image: "/products/assets/Snake%20Leather%20Card%20Holder.jpeg"
     }
   ]);
 
@@ -146,8 +144,8 @@ const Checkout = () => {
                   {cartItems.map((item) => (
                     <div key={item.id} className="flex gap-4">
                       <div className="w-20 h-20 bg-muted rounded-none overflow-hidden">
-                        <img 
-                          src={item.image.src} 
+                        <img
+                          src={item.image}
                           alt={item.name}
                           className="w-full h-full object-cover"
                         />

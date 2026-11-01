@@ -9,28 +9,28 @@ interface Store {
 
 const stores: Store[] = [
   {
-    name: "LINEA Madison Avenue",
-    address: "789 Madison Avenue, New York, NY 10065",
-    phone: "+1 (212) 555-0123",
-    hours: "Mon-Sat: 10AM-8PM, Sun: 12PM-6PM",
-    lat: 40.7614,
-    lng: -73.9776
+    name: "Scale & Sinew Lahore",
+    address: "Main Boulevard, Gulberg III, Lahore, Pakistan",
+    phone: "+92 300 0000000",
+    hours: "Mon-Sat: 10AM-7PM",
+    lat: 31.5204,
+    lng: 74.3587
   },
   {
-    name: "LINEA Beverly Hills", 
-    address: "456 Rodeo Drive, Beverly Hills, CA 90210",
-    phone: "+1 (310) 555-0456",
-    hours: "Mon-Sat: 10AM-8PM, Sun: 12PM-6PM",
-    lat: 34.0696,
-    lng: -118.4014
+    name: "Scale & Sinew Karachi",
+    address: "Clifton, Karachi, Pakistan",
+    phone: "+92 300 0000000",
+    hours: "Mon-Sat: 10AM-7PM",
+    lat: 24.8607,
+    lng: 67.0011
   },
   {
-    name: "LINEA SoHo",
-    address: "123 Spring Street, New York, NY 10012", 
-    phone: "+1 (212) 555-0789",
-    hours: "Mon-Sat: 11AM-8PM, Sun: 12PM-7PM",
-    lat: 40.7253,
-    lng: -74.0022
+    name: "Scale & Sinew Islamabad",
+    address: "F-7 Markaz, Islamabad, Pakistan",
+    phone: "+92 300 0000000",
+    hours: "Mon-Sat: 10AM-7PM",
+    lat: 33.6844,
+    lng: 73.0479
   }
 ];
 

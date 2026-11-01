@@ -6,36 +6,7 @@ import Link from "next/link";
 import { useAppSelector } from "@/app/redux";
 import { useAuth } from "@/hooks/useAuth";
 import ShoppingBag from "./ShoppingBag";
-import WalletImage from "@/assets/scale_senew/Crocodile Scale Leather Brown Wallet.jpeg";
-import LadiesBag from "@/assets/scale_senew/Snake Leather White Ladies Bag.jpeg";
 import { useGetCategoriesQuery } from "@/state/categories-api";
-
-// [
-//     {
-//       id: 1,
-//       name: "Pantheon",
-//       price: "Rs2,850",
-//       image: pantheonImage,
-//       quantity: 1,
-//       category: "Earrings"
-//     },
-//     {
-//       id: 2,
-//       name: "Eclipse",
-//       price: "Rs3,200", 
-//       image: eclipseImage,
-//       quantity: 1,
-//       category: "Bracelets"
-//     },
-//     {
-//       id: 3,
-//       name: "Halo",
-//       price: "Rs1,950",
-//       image: haloImage, 
-//       quantity: 1,
-//       category: "Earrings"
-//     }
-//   ]
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -60,8 +31,8 @@ const Navigation = () => {
     const imagesToPreload = [
       "/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg",
       "/products/assets/Snake%20Leather%20White%20Ladies%20Bag.jpeg",
-      "/products/new-assets/Red%20HandBag%20Crocodile%20%20(1).png",
-      "/products/new-assets/Snake%20Leather%20Ladies%20Bag%20(1).png"
+      "/products/assets/Red%20HandBag%20Crocodile%20%20(1).png",
+      "/products/assets/Snake%20Leather%20Ladies%20Bag%20(1).png"
     ];
     
     imagesToPreload.forEach(src => {
@@ -84,12 +55,12 @@ const Navigation = () => {
     if (!categories || isLoading) return [];
     
     const shopCategory = {
-      name: "Shop", 
+      name: "Shop",
       href: "/category/shop",
       submenuItems: categories.map(category => category.name),
       images: [
-        { src: WalletImage.src, alt: "Wallet Collection", label: "Wallets" },
-        { src: LadiesBag.src, alt: "Ladies Bag Collection", label: "Bags" }
+        { src: "/products/assets/Crocodile Scale Leather Brown Wallet.png", alt: "Wallet Collection", label: "Wallets" },
+        { src: "/products/assets/Snake%20Leather%20White%20Ladies%20Bag.jpeg", alt: "Ladies Bag Collection", label: "Bags" }
       ]
     };
 
@@ -120,7 +91,7 @@ const Navigation = () => {
         "Store Locator"
       ],
       images: [
-        { src: "/products/new-assets/Python%20SKin%201%20smoke.png", alt: "Scale and Senew craftsmanship", label: "Read our story" }
+        { src: "/products/assets/Python%20SKin%201%20smoke.png", alt: "Scale and Sinew craftsmanship", label: "Read our story" }
       ]
     };
 
@@ -184,8 +155,8 @@ const Navigation = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <Link href="/" className="block">
             <img 
-              src="/Scale & Senew White.svg" 
-              alt="Scale and Senew" 
+              src="/Scale & Sinew White.svg"
+              alt="Scale and Sinew" 
               className="h-16 w-auto bg-white"
             />
           </Link>

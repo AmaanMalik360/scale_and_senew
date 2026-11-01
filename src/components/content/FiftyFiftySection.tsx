@@ -1,5 +1,3 @@
-// import earringsCollection from "@/assets/earrings-collection.png";
-// import linkBracelet from "@/assets/link-bracelet.png";
 import Link from "next/link";
 // import { StaticImageData } from "next/image";
 
@@ -11,7 +9,7 @@ const FiftyFiftySection = () => {
           <Link href="/category/wallets" className="block">
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
-                src="/products/new-assets/Black wallet sk (1).png" 
+                src="/products/assets/Snake Leather Black Slim Wallet 4.png" 
                 alt="Crocodile Scale Wallet" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
@@ -31,7 +29,7 @@ const FiftyFiftySection = () => {
           <Link href="/category/bags" className="block">
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
-                src="/products/assets/Snake%20Leather%20White%20Ladies%20Bag.jpeg" 
+                src="/products/assets/Snake Leather Ladies Bag (1).png" 
                 alt="Snake Leather White Ladies Bag" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
@@ -40,7 +38,7 @@ const FiftyFiftySection = () => {
           <div className="">
             <h3 className="text-sm font-normal text-foreground mb-1">
               Snake Leather Bag
-            </h3>
+            </h3>            
             <p className="text-sm font-light text-foreground">
               Structured silhouette with premium exotic leather texture.
             </p>

@@ -2,25 +2,13 @@
 
 import { useState, useRef } from "react";
 import ImageZoom from "./ImageZoom";
-import pantheonImage from "@/assets/pantheon.jpg";
 import { getImageUrl } from "@/lib/utils";
-import eclipseImage from "@/assets/eclipse.jpg";
-import haloImage from "@/assets/halo.jpg";
-import organicEarring from "@/assets/organic-earring.png";
-import linkBracelet from "@/assets/link-bracelet.png";
-const oldProductImages = [
-  pantheonImage,
-  organicEarring,
-  eclipseImage,
-  linkBracelet,
-  haloImage,
-];
 
 interface ProductImageGalleryProps {
   images?: string[];
 }
 
-const PLACEHOLDER_IMAGES = [pantheonImage.src];
+const PLACEHOLDER_IMAGES = ["/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg"];
 
 const ProductImageGallery = ({ images }: ProductImageGalleryProps) => {
   const resolvedImages =

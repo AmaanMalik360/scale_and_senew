@@ -6,8 +6,8 @@ const Footer = () => {
           {/* Brand - Left side */}
           <div>
             <img 
-              src="/Scale & Senew.svg" 
-              alt="Scale and Senew" 
+              src="/Scale & Sinew.svg"
+              alt="Scale and Sinew" 
               className="mb-4 h-6 w-auto"
             />
             <p className="text-sm font-light text-black/70 leading-relaxed max-w-md mb-6">
@@ -18,13 +18,13 @@ const Footer = () => {
             <div className="space-y-2 text-sm font-light text-black/70">
               <div>
                 <p className="font-normal text-black mb-1">Visit Us</p>
-                <p>Scale &amp; Senew Studio</p>
+                <p>Scale &amp; Sinew Studio</p>
                 <p>Pakistan</p>
               </div>
               <div>
                 <p className="font-normal text-black mb-1 mt-3">Contact</p>
                 <p>+92 300 0000000</p>
-                <p>hello@scaleandsenew.com</p>
+                <p>hello@scaleandsinew.com</p>
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@ const Footer = () => {
       <div className="border-t border-[#e5e5e5] -mx-6 px-6 pt-2">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm font-light text-black mb-1 md:mb-0">
-            © 2026 Scale &amp; Senew. All rights reserved.
+            © 2026 Scale &amp; Sinew. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <a href="/privacy-policy" className="text-sm font-light text-black hover:text-black/70 transition-colors">

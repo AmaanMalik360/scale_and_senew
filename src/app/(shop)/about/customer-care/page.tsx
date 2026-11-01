@@ -27,7 +27,7 @@ export default function CustomerCare() {
                 Our support team is available Monday through Saturday, 10 AM to 7 PM PKT.
               </p>
               <div className="space-y-4">
-                <p><strong>Email:</strong> care@scaleandsenew.com</p>
+                <p><strong>Email:</strong> care@scaleandsinew.com</p>
                 <p><strong>Phone:</strong> +92 300 0000000</p>
                 <p><strong>WhatsApp:</strong> Available for quick order support</p>
               </div>

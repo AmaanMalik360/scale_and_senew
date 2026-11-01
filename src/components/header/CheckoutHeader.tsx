@@ -18,8 +18,8 @@ const CheckoutHeader = () => {
           {/* Center - Logo - Absolutely positioned to ensure perfect centering */}
           <Link href="/" className="absolute left-1/2 transform -translate-x-1/2">
             <img 
-              src="/Scale & Senew.svg" 
-              alt="Scale and Senew" 
+              src="/Scale & Sinew.svg"
+              alt="Scale and Sinew" 
               className="h-6 w-auto"
             />
           </Link>

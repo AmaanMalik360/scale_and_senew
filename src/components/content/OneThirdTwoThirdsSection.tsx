@@ -8,7 +8,7 @@ const OneThirdTwoThirdsSection = () => {
           <Link href="/category/wallets" className="block">
             <div className="w-full h-[500px] lg:h-[800px] mb-3 overflow-hidden">
               <img 
-                src="/products/new-assets/Black%20wallet%20sk%20(1).png" 
+                src="/products/assets/Snake Leather Black Slim Wallet 5.png" 
                 alt="Black exotic leather wallet" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
@@ -28,7 +28,7 @@ const OneThirdTwoThirdsSection = () => {
           <Link href="/category/bags" className="block">
             <div className="w-full h-[500px] lg:h-[800px] mb-3 overflow-hidden">
               <img 
-                src="/products/new-assets/Snake%20Leather%20Ladies%20Bag%20(2).png" 
+                src="/products/assets/Snake%20Leather%20Ladies%20Bag%20(2).png" 
                 alt="Snake leather ladies bag" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
               />
