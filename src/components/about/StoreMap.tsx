@@ -11,7 +11,7 @@ const stores: Store[] = [
   {
     name: "Scale & Sinew Lahore",
     address: "Main Boulevard, Gulberg III, Lahore, Pakistan",
-    phone: "+92 300 0000000",
+    phone: "+92 327 8133335",
     hours: "Mon-Sat: 10AM-7PM",
     lat: 31.5204,
     lng: 74.3587
@@ -19,7 +19,7 @@ const stores: Store[] = [
   {
     name: "Scale & Sinew Karachi",
     address: "Clifton, Karachi, Pakistan",
-    phone: "+92 300 0000000",
+    phone: "+92 327 8133335",
     hours: "Mon-Sat: 10AM-7PM",
     lat: 24.8607,
     lng: 67.0011
@@ -27,7 +27,7 @@ const stores: Store[] = [
   {
     name: "Scale & Sinew Islamabad",
     address: "F-7 Markaz, Islamabad, Pakistan",
-    phone: "+92 300 0000000",
+    phone: "+92 327 8133335",
     hours: "Mon-Sat: 10AM-7PM",
     lat: 33.6844,
     lng: 73.0479

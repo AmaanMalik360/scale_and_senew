@@ -8,14 +8,14 @@ export default function StoreLocator() {
     {
       name: "Scale & Sinew Studio",
       address: "Lahore, Pakistan",
-      phone: "+92 300 0000000",
+      phone: "+92 327 8133335",
       hours: "Mon-Sat: 10AM-7PM",
       services: ["Product Viewing", "Custom Orders", "Leather Care Guidance"]
     },
     {
       name: "Online WhatsApp Store",
       address: "Available nationwide",
-      phone: "+92 300 0000000",
+      phone: "+92 327 8133335",
       hours: "Daily: 10AM-10PM",
       services: ["Order Assistance", "Style Consultation", "Delivery Support"]
     }

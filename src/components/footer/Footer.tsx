@@ -23,8 +23,8 @@ const Footer = () => {
               </div>
               <div>
                 <p className="font-normal text-black mb-1 mt-3">Contact</p>
-                <p>+92 300 0000000</p>
-                <p>hello@scaleandsinew.com</p>
+                <p>+92 327 8133335</p>
+                <p>scalesinew@gmail.com</p>
               </div>
             </div>
           </div>

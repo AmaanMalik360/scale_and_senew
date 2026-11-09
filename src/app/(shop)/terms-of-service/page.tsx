@@ -51,7 +51,7 @@ export default function TermsOfService() {
           <section className="mb-8">
             <h2 className="text-2xl font-light text-foreground mb-4">Contact Information</h2>
             <p className="text-muted-foreground mb-4">
-              Questions about the Terms of Service should be sent to: legal@scaleandsinew.com
+              Questions about the Terms of Service should be sent to: scalesinew@gmail.com
             </p>
           </section>
         </div>

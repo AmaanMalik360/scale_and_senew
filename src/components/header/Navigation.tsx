@@ -88,7 +88,7 @@ const Navigation = () => {
         "Sustainability",
         "Size Guide",
         "Customer Care",
-        "Store Locator"
+        // "Store Locator"
       ],
       images: [
         { src: "/products/assets/Python%20SKin%201%20smoke.png", alt: "Scale and Sinew craftsmanship", label: "Read our story" }
