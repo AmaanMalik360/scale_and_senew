@@ -1,6 +1,6 @@
 "use client";
 
-import { Controller, Control, FieldErrors } from "react-hook-form";
+import { Controller, Control, FieldErrors, Path } from "react-hook-form";
 import * as Select from "@radix-ui/react-select";
 import * as Label from "@radix-ui/react-label";
 import { ChevronDown, Check } from "lucide-react";
@@ -22,10 +22,10 @@ const flattenCategoriesWithLevel = (
   return result;
 };
 
-export interface CategorySelectDropdownProps {
-  name: string;
-  control: Control<any>;
-  errors: FieldErrors<any>;
+export interface CategorySelectDropdownProps<T extends Record<string, any> = any> {
+  name: Path<T>;
+  control: Control<T>;
+  errors: FieldErrors<T>;
   categories: Category[];
   label?: string;
   placeholder?: string;
@@ -34,7 +34,7 @@ export interface CategorySelectDropdownProps {
   noneOptionText?: string;
 }
 
-export const CategorySelectDropdown = ({
+export const CategorySelectDropdown = <T extends Record<string, any> = any>({
   name,
   control,
   errors,
@@ -44,7 +44,7 @@ export const CategorySelectDropdown = ({
   disabled = false,
   description,
   noneOptionText = "None (Root Category)",
-}: CategorySelectDropdownProps) => {
+}: CategorySelectDropdownProps<T>) => {
   const flatCategories = flattenCategoriesWithLevel(categories);
 
   return (
