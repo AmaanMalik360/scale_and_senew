@@ -1,6 +1,6 @@
 "use client";
 
-import { Controller, useFormContext, FieldValues, Path, get } from "react-hook-form";
+import { Controller, useFormContext, FieldValues, Path, get, FieldError } from "react-hook-form";
 import { FormFieldWrapper } from "./FormFieldWrapper";
 
 export interface CheckboxOption {
@@ -27,7 +27,7 @@ export const CheckboxGroupField = <T extends FieldValues,>({
     control,
     formState: { errors },
   } = useFormContext<T>();
-  const error = get(errors, name);
+  const error = get(errors, name) as FieldError | undefined;
 
   return (
     <FormFieldWrapper name={name} label={label} description={description} error={error}>
