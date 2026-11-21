@@ -6,9 +6,9 @@ const Footer = () => {
           {/* Brand - Left side */}
           <div>
             <img 
-              src="/Scale & Sinew.svg"
+              src="/Scale and Sinew White.svg"
               alt="Scale and Sinew" 
-              className="mb-4 h-6 w-auto"
+              className="mb-4 h-16 w-auto"
             />
             <p className="text-sm font-light text-black/70 leading-relaxed max-w-md mb-6">
               Exotic leather wallets, bags, and card holders crafted for everyday luxury.

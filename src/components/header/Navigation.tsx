@@ -29,7 +29,7 @@ const Navigation = () => {
   // Preload dropdown images for faster display
   useEffect(() => {
     const imagesToPreload = [
-      "/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg",
+      "/products/assets/Crocodile%20Leather%20Black%20Wallet.png",
       "/products/assets/Snake%20Leather%20White%20Ladies%20Bag.jpeg",
       "/products/assets/Red%20HandBag%20Crocodile%20%20(1).png",
       "/products/assets/Snake%20Leather%20Ladies%20Bag%20(1).png"
@@ -155,7 +155,7 @@ const Navigation = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <Link href="/" className="block">
             <img 
-              src="/Scale & Sinew White.svg"
+              src="/Scale and Sinew White.svg"
               alt="Scale and Sinew" 
               className="h-16 w-auto bg-white"
             />

@@ -52,7 +52,7 @@ const Checkout = () => {
       name: "Crocodile Black Wallet",
       price: "Rs18,500",
       quantity: 1,
-      image: "/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg",
+      image: "/products/assets/Crocodile%20Leather%20Black%20Wallet.png",
       size: "Standard"
     },
     {

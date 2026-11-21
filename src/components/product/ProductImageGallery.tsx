@@ -8,7 +8,7 @@ interface ProductImageGalleryProps {
   images?: string[];
 }
 
-const PLACEHOLDER_IMAGES = ["/products/assets/Crocodile%20Leather%20Black%20Wallet.jpeg"];
+const PLACEHOLDER_IMAGES = ["/products/assets/Crocodile%20Leather%20Black%20Wallet.png"];
 
 const ProductImageGallery = ({ images }: ProductImageGalleryProps) => {
   const resolvedImages =
