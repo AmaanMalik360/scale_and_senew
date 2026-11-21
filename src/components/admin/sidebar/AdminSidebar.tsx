@@ -4,19 +4,19 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
+  // LayoutDashboard,
   ClipboardList,
-  Users,
-  Tag,
+  // Users,
+  // Tag,
   FolderOpen,
-  Receipt,
-  Briefcase,
+  // Receipt,
+  // Briefcase,
   PlusCircle,
-  Image,
+  // Image,
   List,
-  MessageSquare,
-  UserCog,
-  Shield,
+  // MessageSquare,
+  // UserCog,
+  // Shield,
   LogOut,
   ExternalLink,
   Store,
@@ -53,10 +53,10 @@ const navigation: NavSection[] = [
   {
     title: "Main menu",
     items: [
-      { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+      // { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
       { label: "Order Management", icon: ClipboardList, href: "/admin/orders" },
-      { label: "Customers", icon: Users, href: "/admin/customers" },
-      { label: "Coupon Code", icon: Tag, href: "/admin/coupons" },
+      // { label: "Customers", icon: Users, href: "/admin/customers" },
+      // { label: "Coupon Code", icon: Tag, href: "/admin/coupons" },
       {
         label: "Categories",
         icon: FolderOpen,
@@ -65,30 +65,30 @@ const navigation: NavSection[] = [
           { label: "Attributes", icon: Layers, href: "/admin/categories/attributes" },
         ],
       },
-      { label: "Transaction", icon: Receipt, href: "/admin/transactions" },
-      { label: "Brand", icon: Briefcase, href: "/admin/brands" },
+      // { label: "Transaction", icon: Receipt, href: "/admin/transactions" },
+      // { label: "Brand", icon: Briefcase, href: "/admin/brands" },
     ],
   },
   {
     title: "Product",
     items: [
       { label: "Add Products", icon: PlusCircle, href: "/admin/products/add" },
-      { label: "Product Media", icon: Image, href: "/admin/products/media" },
-      { label: "Product List", icon: List, href: "/admin/products/list" },
-      {
-        label: "Product Reviews",
-        icon: MessageSquare,
-        href: "/admin/products/reviews",
-      },
+      // { label: "Product Media", icon: Image, href: "/admin/products/media" },
+      // { label: "Product List", icon: List, href: "/admin/products/list" },
+      // {
+      //   label: "Product Reviews",
+      //   icon: MessageSquare,
+      //   href: "/admin/products/reviews",
+      // },
     ],
   },
-  {
-    title: "Admin",
-    items: [
-      { label: "Admin role", icon: UserCog, href: "/admin/roles" },
-      { label: "Control Authority", icon: Shield, href: "/admin/authority" },
-    ],
-  },
+  // {
+  //   title: "Admin",
+  //   items: [
+  //     { label: "Admin role", icon: UserCog, href: "/admin/roles" },
+  //     { label: "Control Authority", icon: Shield, href: "/admin/authority" },
+  //   ],
+  // },
 ];
 
 export function AdminSidebar() {
