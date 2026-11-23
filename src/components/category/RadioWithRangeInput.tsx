@@ -15,23 +15,40 @@ interface RadioWithRangeInputProps {
   onChange: (type: "radios_with_range", filterKey: string, value: { min?: number; max?: number } | string[]) => void;
 }
 
-export default function RadioWithRangeInput({ 
-  type, 
-  filterKey, 
-  value, 
-  options, 
-  allowCustom, 
-  enforceBoth = false, 
-  onChange 
-}: RadioWithRangeInputProps) {
-  const [customRange, setCustomRange] = useState({ 
-    min: "", 
-    max: "" 
-  });
+// Custom inputs accept PKR (major units); filter values emitted to the API
+// are paisa (minor units), matching product_prices.amount on the backend.
+const PKR_TO_PAISA = 100;
 
-  // Determine current selection
-  const isCustomSelected = Array.isArray(value) && value[0] === "custom";
+export default function RadioWithRangeInput({
+  type,
+  filterKey,
+  value,
+  options,
+  allowCustom,
+  enforceBoth = false,
+  onChange
+}: RadioWithRangeInputProps) {
   const currentRange = !Array.isArray(value) ? value : { min: undefined, max: undefined };
+
+  // Find currently selected preset option
+  const selectedOption = options.find(
+    opt => !Array.isArray(value) && JSON.stringify(opt.values) === JSON.stringify(value)
+  );
+
+  // Custom is selected when the user picked "Custom", or when the applied range
+  // matches no preset option.
+  const isCustomSelected =
+    (Array.isArray(value) && value[0] === "custom") ||
+    (!selectedOption && (currentRange.min !== undefined || currentRange.max !== undefined));
+
+  const [customRange, setCustomRange] = useState(() => ({
+    min: isCustomSelected && currentRange.min !== undefined
+      ? String(currentRange.min / PKR_TO_PAISA)
+      : "",
+    max: isCustomSelected && currentRange.max !== undefined
+      ? String(currentRange.max / PKR_TO_PAISA)
+      : "",
+  }));
 
   const handleRadioChange = (selectedValue: string) => {
     if (selectedValue === "custom") {
@@ -45,29 +62,27 @@ export default function RadioWithRangeInput({
     setCustomRange({ min: "", max: "" });
   };
 
-  const handleCustomRangeChange = () => {
-    const minNum = customRange.min ? Number(customRange.min) : undefined;
-    const maxNum = customRange.max ? Number(customRange.max) : undefined;
+  const handleCustomInputChange = (field: "min" | "max", raw: string) => {
+    const next = { ...customRange, [field]: raw };
+    setCustomRange(next);
+
+    const minNum = next.min !== "" ? Math.round(Number(next.min) * PKR_TO_PAISA) : undefined;
+    const maxNum = next.max !== "" ? Math.round(Number(next.max) * PKR_TO_PAISA) : undefined;
 
     if (enforceBoth) {
       if (minNum !== undefined && maxNum !== undefined) {
         onChange(type, filterKey, { min: minNum, max: maxNum });
       }
-    } else {
-      const range: { min?: number; max?: number } = {};
-      if (minNum !== undefined) range.min = minNum;
-      if (maxNum !== undefined) range.max = maxNum;
-      if (range.min !== undefined || range.max !== undefined) {
-        onChange(type, filterKey, range);
-      }
+      return;
+    }
+
+    const range: { min?: number; max?: number } = {};
+    if (minNum !== undefined) range.min = minNum;
+    if (maxNum !== undefined) range.max = maxNum;
+    if (range.min !== undefined || range.max !== undefined) {
+      onChange(type, filterKey, range);
     }
   };
-
-  // Find currently selected option
-  const selectedOption = options.find(opt => {
-    if (Array.isArray(value)) return false;
-    return JSON.stringify(opt.values) === JSON.stringify(value);
-  });
 
   return (
     <div className="space-y-3">
@@ -109,24 +124,18 @@ export default function RadioWithRangeInput({
               <div className="flex items-center space-x-3 pl-7">
                 <input
                   type="number"
-                  placeholder="Min"
+                  placeholder="Min (Rs)"
                   value={customRange.min}
-                  onChange={e => {
-                    setCustomRange(p => ({ ...p, min: e.target.value }));
-                    handleCustomRangeChange();
-                  }}
-                  className="w-20 px-2 py-1 border border-border rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-foreground"
+                  onChange={e => handleCustomInputChange("min", e.target.value)}
+                  className="w-24 px-2 py-1 border border-border rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-foreground"
                 />
                 <span className="text-sm">to</span>
                 <input
                   type="number"
-                  placeholder="Max"
+                  placeholder="Max (Rs)"
                   value={customRange.max}
-                  onChange={e => {
-                    setCustomRange(p => ({ ...p, max: e.target.value }));
-                    handleCustomRangeChange();
-                  }}
-                  className="w-20 px-2 py-1 border border-border rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-foreground"
+                  onChange={e => handleCustomInputChange("max", e.target.value)}
+                  className="w-24 px-2 py-1 border border-border rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-foreground"
                 />
               </div>
             )}

@@ -17,29 +17,13 @@ import {
 } from "./hooks";
 
 const DEFAULT_PAGE_SIZE = 5;
-const PAGE_SIZE_OPTIONS = [2, 5, 10, 20, 50];
+const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
 
 const PRICE_OPTIONS = [
-  { 
-    label: "Under Rs10", 
-    // value: "0-100000", 
-    values: { min: 0, max: 1000 } 
-  },
-  { 
-    label: "Rs10 – Rs20", 
-    // value: "100000-200000", 
-    values: { min: 1000, max: 2000 } 
-  },
-  { 
-    label: "Rs20 – Rs30", 
-    // value: "200000-300000", 
-    values: { min: 2000, max: 3000 } 
-  },
-  { 
-    label: "Over Rs30", 
-    // value: "300000-", 
-    values: { min: 3000 } 
-  },
+  { label: "Under Rs 10,000",  values: { min: 0,       max: 1000000 } },
+  { label: "Rs 10,000 – Rs 20,000", values: { min: 1000000, max: 2000000 } },
+  { label: "Rs 20,000 – Rs 30,000", values: { min: 2000000, max: 3000000 } },
+  { label: "Over Rs 30,000",   values: { min: 3000000 } },
 ];
 
 

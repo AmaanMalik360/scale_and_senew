@@ -105,8 +105,9 @@ const Navigation = () => {
   const navItems = getNavItemsFromCategories();
 
   return (
-    <nav 
-      className="relative" 
+    <nav
+      className="relative"
+      onMouseLeave={() => setActiveDropdown(null)}
       style={{
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         backdropFilter: 'blur(10px)'
@@ -133,13 +134,12 @@ const Navigation = () => {
         </button>
 
         {/* Left navigation - Hidden on tablets and mobile */}
-        <div className="hidden lg:flex space-x-8">
+        <div className="hidden lg:flex space-x-8 h-full">
           {navItems.map((item) => (
             <div
               key={item.name}
-              className="relative"
+              className="relative h-full flex items-center"
               onMouseEnter={() => setActiveDropdown(item.name)}
-              onMouseLeave={() => setActiveDropdown(null)}
             >
               <Link
                 href={item.href}
