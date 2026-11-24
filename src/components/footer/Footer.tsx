@@ -5,9 +5,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-8">
           {/* Brand - Left side */}
           <div>
-            <img 
-              src="/Scale and Sinew White.svg"
-              alt="Scale and Sinew" 
+            <img
+              src="/Scales and Sinew White.svg"
+              alt="Scales and Sinew"
               className="mb-4 h-16 w-auto"
             />
             <p className="text-sm font-light text-black/70 leading-relaxed max-w-md mb-6">
@@ -18,7 +18,7 @@ const Footer = () => {
             <div className="space-y-2 text-sm font-light text-black/70">
               <div>
                 <p className="font-normal text-black mb-1">Visit Us</p>
-                <p>Scale &amp; Sinew Studio</p>
+                <p>Scales &amp; Sinew Studio</p>
                 <p>Pakistan</p>
               </div>
               <div>
@@ -72,7 +72,7 @@ const Footer = () => {
       <div className="border-t border-[#e5e5e5] -mx-6 px-6 pt-2">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm font-light text-black mb-1 md:mb-0">
-            © 2026 Scale &amp; Sinew. All rights reserved.
+            © 2026 Scales &amp; Sinew. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <a href="/privacy-policy" className="text-sm font-light text-black hover:text-black/70 transition-colors">

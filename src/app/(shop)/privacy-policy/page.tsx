@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - Scale & Sinew",
-  description: "Privacy policy for Scale & Sinew",
+  title: "Privacy Policy - Scales & Sinew",
+  description: "Privacy policy for Scales & Sinew",
 };
 
 export default function PrivacyPolicy() {

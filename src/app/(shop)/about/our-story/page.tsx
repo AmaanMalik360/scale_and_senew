@@ -19,9 +19,9 @@ export default function OurStory() {
         <ContentSection>
           <ImageTextBlock
             image="/products/assets/Snake Long Wallet Final 2.png"
-            imageAlt="Scale and Sinew crocodile leather wallet"
+            imageAlt="Scales and Sinew crocodile leather wallet"
             title="Built for Lasting Use"
-            content="Scale and Sinew began with a simple idea: everyday carry should feel premium, durable, and personal. We focus on exotic leather wallets, bags, and card holders made for people who value design, function, and long-term quality."
+            content="Scales and Sinew began with a simple idea: everyday carry should feel premium, durable, and personal. We focus on exotic leather wallets, bags, and card holders made for people who value design, function, and long-term quality."
             imagePosition="left"
           />
         </ContentSection>

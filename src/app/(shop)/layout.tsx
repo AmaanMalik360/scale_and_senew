@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Scale & Sinew — Exotic Leather Wallets, Bags & Card Holders",
-    template: "%s | Scale & Sinew",
+    default: "Scales & Sinew — Exotic Leather Wallets, Bags & Card Holders",
+    template: "%s | Scales & Sinew",
   },
   description:
     "Premium exotic leather wallets, bags, and card holders crafted for everyday luxury.",

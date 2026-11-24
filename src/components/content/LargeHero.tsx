@@ -4,7 +4,7 @@ const LargeHero = () => {
       <div className="w-full aspect-[16/9] mb-3 overflow-hidden">
         <img 
           src="/products/assets/Red%20HandBag%20Crocodile%20%20(2).png" 
-          alt="Scale and Sinew exotic leather bag" 
+          alt="Scales and Sinew exotic leather bag" 
           className="w-full h-full object-cover"
         />
       </div>

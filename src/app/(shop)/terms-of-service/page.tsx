@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - Scale & Sinew",
-  description: "Terms of service for Scale & Sinew",
+  title: "Terms of Service - Scales & Sinew",
+  description: "Terms of service for Scales & Sinew",
 };
 
 export default function TermsOfService() {
@@ -18,7 +18,7 @@ export default function TermsOfService() {
           <section className="mb-8">
             <h2 className="text-2xl font-light text-foreground mb-4">Agreement to Terms</h2>
             <p className="text-muted-foreground mb-4">
-              By accessing and using Scale & Sinew's website and services, you accept and agree 
+              By accessing and using Scales & Sinew's website and services, you accept and agree
               to be bound by the terms and provision of this agreement.
             </p>
           </section>
@@ -26,7 +26,7 @@ export default function TermsOfService() {
           <section className="mb-8">
             <h2 className="text-2xl font-light text-foreground mb-4">Use License</h2>
             <p className="text-muted-foreground mb-4">
-              Permission is granted to temporarily download one copy of the materials on Scale & Sinew's 
+              Permission is granted to temporarily download one copy of the materials on Scales & Sinew's
               website for personal, non-commercial transitory viewing only.
             </p>
           </section>

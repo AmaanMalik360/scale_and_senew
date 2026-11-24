@@ -14,9 +14,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://scalesinew.com"),
-  title: "Scale & Sinew — Exotic Leather Wallets, Bags & Card Holders",
+  title: "Scales & Sinew — Exotic Leather Wallets, Bags & Card Holders",
   description:
     "Premium exotic leather wallets, bags, and card holders crafted for everyday luxury.",
+  icons: {
+    icon: "/Scales and Sinew Favicon.png",
+    apple: "/Scales and Sinew Favicon.png",
+  },
 };
 
 export default function RootLayout({

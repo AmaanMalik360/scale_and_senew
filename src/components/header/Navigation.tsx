@@ -91,7 +91,7 @@ const Navigation = () => {
         // "Store Locator"
       ],
       images: [
-        { src: "/products/assets/Python%20SKin%201%20smoke.png", alt: "Scale and Sinew craftsmanship", label: "Read our story" }
+        { src: "/products/assets/Python%20SKin%201%20smoke.png", alt: "Scales and Sinew craftsmanship", label: "Read our story" }
       ]
     };
 
@@ -154,9 +154,9 @@ const Navigation = () => {
         {/* Center logo */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <Link href="/" className="block">
-            <img 
-              src="/Scale and Sinew White.svg"
-              alt="Scale and Sinew" 
+            <img
+              src="/Scales and Sinew White.svg"
+              alt="Scales and Sinew"
               className="h-16 w-auto bg-white"
             />
           </Link>

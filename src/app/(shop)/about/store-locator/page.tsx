@@ -6,7 +6,7 @@ import AboutSidebar from "../../../../components/about/AboutSidebar";
 export default function StoreLocator() {
   const stores = [
     {
-      name: "Scale & Sinew Studio",
+      name: "Scales & Sinew Studio",
       address: "Lahore, Pakistan",
       phone: "+92 327 8133335",
       hours: "Mon-Sat: 10AM-7PM",
@@ -30,7 +30,7 @@ export default function StoreLocator() {
       <main className="w-full lg:w-[70vw] lg:ml-auto px-6">
         <PageHeader 
           title="Store Locator" 
-          subtitle="Connect with Scale & Sinew through our studio and online support"
+          subtitle="Connect with Scales & Sinew through our studio and online support"
         />
         
         <ContentSection>

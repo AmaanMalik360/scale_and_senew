@@ -20,9 +20,9 @@ const DEFAULT_PAGE_SIZE = 5;
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
 
 const PRICE_OPTIONS = [
-  { label: "Under Rs 10,000",  values: { min: 0,       max: 1000000 } },
-  { label: "Rs 10,000 – Rs 20,000", values: { min: 1000000, max: 2000000 } },
-  { label: "Rs 20,000 – Rs 30,000", values: { min: 2000000, max: 3000000 } },
+  { label: "Under Rs 10,000",  values: { min: 0, max: 1000000 } },
+  { label: "Rs 10,000 - Rs 20,000", values: { min: 1000000, max: 2000000 } },
+  { label: "Rs 20,000 - Rs 30,000", values: { min: 2000000, max: 3000000 } },
   { label: "Over Rs 30,000",   values: { min: 3000000 } },
 ];
 

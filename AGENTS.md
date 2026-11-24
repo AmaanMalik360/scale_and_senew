@@ -1,4 +1,4 @@
-# Frontend — Scale & Sinew (Next.js)
+# Frontend — Scales & Sinew (Next.js)
 
 ## Role
 
